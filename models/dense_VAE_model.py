@@ -18,8 +18,7 @@ class dense_VAE(gluon.Block):
                  out_n_channels = 1,
                  out_width = 28,
                  out_height = 28,
-                 batch_size = 64,
-                kernel_size = 5):
+                 batch_size = 64):
         
         # Store some hyperparameters
         self.n_latent = n_latent
@@ -29,7 +28,6 @@ class dense_VAE(gluon.Block):
         self.out_width = out_width
         self.out_height = out_height
         self.batch_size = batch_size
-        self.kernel_size = 5
         
         # Initialize the super class
         super(dense_VAE, self).__init__()
