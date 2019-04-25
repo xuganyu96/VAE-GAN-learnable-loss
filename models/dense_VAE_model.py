@@ -101,16 +101,16 @@ class dense_VAE(gluon.Block):
         # content_loss = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=True)(x_hat, x.reshape(batch_size, -1))
         
         # Add 1e-10 to prevent log(0) from happening
-        # logloss = nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
+        logloss = nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
         
         # let's try a l2loss
-        l2loss = nd.sum((x_hat - x) ** 2, axis=1)
+        # l2loss = nd.sum((x_hat - x) ** 2, axis=1)
         
         # print(nd.mean(KL_div_loss).asscalar(), nd.mean(l2loss).asscalar())
         
         # Sum up the loss
-        # loss = - KL_div_loss - logloss
-        loss = - KL_div_loss + l2loss
+        loss = - KL_div_loss - logloss
+        # loss = - KL_div_loss + l2loss
         return loss
             
             
