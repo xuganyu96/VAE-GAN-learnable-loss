@@ -3,6 +3,7 @@ from mxnet import nd, init, gluon, autograd, image
 from mxnet.gluon import data as gdata, loss as gloss, nn
 import numpy as np
 import d2l
+from LossNetwork import *
 
 
 CTX = d2l.try_gpu()
@@ -11,7 +12,7 @@ CTX = d2l.try_gpu()
 # VAE network. The implementation is identical to that of the demo
 # provided in https://gluon.mxnet.io/chapter13_unsupervised-learning/vae-gluon.html
 
-class dense_VAE(gluon.Block):
+class dense_VAE_VGG_Loss(gluon.Block):
     
     def __init__(self, n_latent = 2,
                  n_hlayers = 3,
@@ -31,6 +32,10 @@ class dense_VAE(gluon.Block):
         self.out_height = out_height
         self.batch_size = batch_size
         self.kernel_size = 5
+	vgg = Vgg16()
+	vgg.init_vgg_params('./', CTX, True)
+	self.loss_net = LossNet(vgg, 1, 1, None)
+	
         
         # Initialize the super class
         super(dense_VAE, self).__init__()
@@ -72,6 +77,7 @@ class dense_VAE(gluon.Block):
         # x is input of shape (n_batch, n_channels, width, height)
         batch_size = x.shape[0]
         x = x.reshape(batch_size, -1)
+	self.loss_net.batch_size = batch_size
         
         
         # Get the latent layer
