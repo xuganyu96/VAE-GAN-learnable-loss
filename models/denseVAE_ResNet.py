@@ -87,7 +87,7 @@ class DenseVAE_ResNet(nn.Block):
         latent_logvar = nd.split(latent_layer, axis=1, num_outputs = 2)[1]
         
         # Compute the latent variable's value using the reparametrization trick
-        eps = nd.random_normal(loc=0, scale=1, shape=(batch_size, self.n_latent))
+        eps = nd.random_normal(loc=0, scale=1, shape=(batch_size, self.n_latent), ctx=CTX)
         latent_z = latent_mean + nd.exp(0.5 * latent_logvar) * eps
         
         # At this point, also compute the KL_Divergence between latent variable and 
@@ -106,13 +106,13 @@ class DenseVAE_ResNet(nn.Block):
         # with genuine images labeled 1 and generated images labeled 0
         # in this case a higher value in ResNet's output indicate higher confidence of
         # an image's realness; therefore we want to reduce the negative of the ResNet's output
-        content_loss = - self.discriminator(x_hat)
+        content_loss = -nd.sigmoid(self.discriminator(x_hat)).reshape(-1)
         
         # For the first training cycle, resnet is completely not trained
         # so we will not use the resnet as a content loss metric; instead we will use
         # the logloss as a content loss
         if first_cycle:
-            content_loss = nd.sum(x_flattened * nd.log(x_hat_flattened + 1e-10) +
+            content_loss = -nd.sum(x_flattened * nd.log(x_hat_flattened + 1e-10) +
                                   (1-x_flattened)*nd.log(1-x_hat_flattened + 1e-10), 
                                   axis=1)
         
@@ -136,7 +136,7 @@ class DenseVAE_ResNet(nn.Block):
         latent_logvar = nd.split(latent_layer, axis=1, num_outputs = 2)[1]
         
         # Compute the latent variable's value using the reparametrization trick
-        eps = nd.random_normal(loc=0, scale=1, shape=(batch_size, self.n_latent))
+        eps = nd.random_normal(loc=0, scale=1, shape=(batch_size, self.n_latent), ctx=CTX)
         latent_z = latent_mean + nd.exp(0.5 * latent_logvar) * eps
         
         # At this point, also compute the KL_Divergence between latent variable and 
