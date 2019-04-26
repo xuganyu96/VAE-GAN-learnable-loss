@@ -4,7 +4,7 @@ from mxnet.gluon import nn
 
 # The residual block implementation is directly taken from 
 # D2L's website at http://d2l.ai/chapter_convolutional-modern/resnet.html
-class Residual(nn.Block):
+class Residual(gluon.Block):
     def __init__(self, num_channels, use_1x1conv=False, strides=1, **kwargs):
         super(Residual, self).__init__(**kwargs)
         self.conv1 = nn.Conv2D(num_channels, kernel_size=3, padding=1,
@@ -27,7 +27,7 @@ class Residual(nn.Block):
     
 # The implementation of a ResNet is taken from the D2L website
 # at http://d2l.ai/chapter_convolutional-modern/resnet.html
-class ResNet(nn.Block):
+class ResNet(gluon.Block):
     def __init__(self, n_classes = 1):
         super(ResNet, self).__init__()
         

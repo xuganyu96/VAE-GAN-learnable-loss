@@ -13,22 +13,26 @@ import sys
 sys.path.insert(0, "./models")
 from DenseVAE import DenseVAE
 
+all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
+
+# Use 80% of the data as training data
+# since the anime faces have no particular order, just take the first
+# 80% as training set
 # Prepare the training data and training data iterator
-mnist = mx.test_utils.get_mnist()
-train_features = nd.array(mnist['train_data'], ctx=CTX)
+n_train = int(all_features.shape[0] * 0.8)
+train_features = all_features[0:n_train]
+test_features = all_features[n_train:]
 batch_size = 64
 train_iter = gdata.DataLoader(train_features,
                                   batch_size,
                                  shuffle=True,
                                  last_batch='keep')
-
-
 # Extract the training image's shape
 _, n_channels, width, height = train_features.shape
 
 # Instantiate the model, then build the trainer and 
 # initialize the parameters
-dense_vae = DenseVAE(n_latent = 2,
+dense_vae = DenseVAE(n_latent = 3,
                     n_hlayers = 10,
                     n_hnodes = 400,
                     n_out_channels = n_channels,
@@ -40,7 +44,7 @@ trainer = gluon.Trainer(dense_vae.collect_params(),
                         {'learning_rate': .001})
 
 
-# Define the number of epochs
+
 n_epoch = 50
 for epoch in range(n_epoch):
     
@@ -64,12 +68,12 @@ for epoch in range(n_epoch):
                                                                    epoch_train_loss, 
                                                                    time_consumed))
     
-# Validation and output validation images
-img_arrays = dense_vae.generate(nd.array(mnist['test_data'], ctx=CTX)).asnumpy()
+# Validation
+img_arrays = dense_vae.generate(test_features).asnumpy()
 
 for i in range(10):
     img_array = img_arrays[i]
     fig = plt.figure()
-    plt.imshow(img_array.reshape(width, height))
-    plt.savefig('./results/images/DenseVAE_on_MNIST/MNIST_2_10_400_50_dense_vae_val/' + str(i) + '.png')
+    plt.imshow(img_array.reshape(width, height, n_channels))
+    plt.savefig('./results/images/DenseVAE_on_anime/10_10_400_50/' + str(i) + '.png')
     plt.close()

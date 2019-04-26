@@ -15,7 +15,7 @@ class dense_VAE(gluon.Block):
     def __init__(self, n_latent = 2,
                  n_hlayers = 3,
                  n_hnodes = 400,
-                 out_n_channels = 1,
+                 n_out_channels = 1,
                  out_width = 28,
                  out_height = 28,
                  batch_size = 64,
@@ -25,7 +25,7 @@ class dense_VAE(gluon.Block):
         self.n_latent = n_latent
         self.n_hlayers = n_hlayers
         self.n_hnodes = n_hnodes
-        self.out_n_channels = out_n_channels
+        self.n_out_channels = n_out_channels
         self.out_width = out_width
         self.out_height = out_height
         self.batch_size = batch_size
@@ -90,10 +90,9 @@ class dense_VAE(gluon.Block):
         
         # Use the decoder to generate output
         x_hat = self.decoder(latent_z)        
-        self.x_hat = x_hat
         
         # Compute the KL_Divergence between latent variable and standard normal
-        KL_div_loss = 0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
+        KL_div_loss = -0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
                                    axis=1)
         
         # Compute the content loss that is the cross entropy between the original image 
@@ -101,16 +100,10 @@ class dense_VAE(gluon.Block):
         # content_loss = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=True)(x_hat, x.reshape(batch_size, -1))
         
         # Add 1e-10 to prevent log(0) from happening
-        logloss = nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
-        
-        # let's try a l2loss
-        # l2loss = nd.sum((x_hat - x) ** 2, axis=1)
-        
-        # print(nd.mean(KL_div_loss).asscalar(), nd.mean(l2loss).asscalar())
+        logloss = - nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
         
         # Sum up the loss
-        loss = - KL_div_loss - logloss
-        # loss = - KL_div_loss + l2loss
+        loss = KL_div_loss + logloss
         return loss
             
             

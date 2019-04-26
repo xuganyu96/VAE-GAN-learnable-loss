@@ -1,7 +1,7 @@
 # Import the basic packages
 import mxnet as mx
 from mxnet import nd, gluon
-from mxnet.gluon import nn
+from mxnet.gluon import nn, loss as gloss
 import numpy as np
 import d2l
 CTX = d2l.try_gpu()
@@ -20,8 +20,8 @@ from DenseDecoder import DenseDecoder
 
 class DenseVAE(gluon.Block):
     
-    def __init__(self, n_latent = 10,
-                 n_hlayers = 10,
+    def __init__(self, n_latent = 2,
+                 n_hlayers = 3,
                  n_hnodes = 400,
                  n_out_channels = 1,
                  out_width = 28,
@@ -40,21 +40,44 @@ class DenseVAE(gluon.Block):
         
         # Define the networks: encoder and decoder
         with self.name_scope():
-            self.encoder = DenseEncoder(n_latent = n_latent,
-                                        n_hlayers = n_hlayers,
-                                        n_hnodes = n_hnodes)
+            self.encoder = nn.Sequential(prefix='encoder')
             
-            self.decoder = DenseDecoder(n_hlayers = n_hlayers,
-                                        n_hnodes = n_hnodes,
-                                        n_out_channels = n_out_channels,
-                                        out_width = out_width,
-                                        out_height = out_height)
+            # The input of encoder networks are images so they will be of the
+            # shape (n_batch, n_channels, width, height)
+            for i in range(n_hlayers):
+                # Choice of number of channels is suggested in the VAE_GAN paper
+                # the first hidden layer will have 2^3 channels
+                # and each hidden_layer after will have double the number of 
+                # channels of the previous hidden layer
+                self.encoder.add(nn.Dense(self.n_hnodes, activation='relu'))
+                
+                
+            # Finally add the output layer that is the latent variables
+            # But keep 2 * latent nodes because the first n_latent of them are
+            # the latent means and the second n_latent of them are 
+            # log variances
+            self.encoder.add(nn.Dense(2 * n_latent))
+            
+            # Define the decoder network
+            self.decoder = nn.Sequential(prefix='decoder')
+            
+            # The input of decoder network is latent space NDArray of shape
+            # (n_batch, n_latent)
+            for i in range(n_hlayers):
+                # Add Dense layers with BatchNorm() and Relu activation
+                self.decoder.add(nn.Dense(self.n_hnodes, activation='relu'))
+            # Add the output layer that is another Dense layer but with sigmoid
+            # transformation to keep the values between (0, 1)
+            self.decoder.add(nn.Dense(self.n_out_channels * self.out_width * self.out_height,
+                                      activation='sigmoid'))
             
     def forward(self, x):
-        # x should be image arrays (4-dimensional) but encoder should be able 
-        # to handle this so I am not going flatten it
+        # x is input of shape (n_batch, n_channels, width, height)
+        batch_size = x.shape[0]
+        x = x.reshape(batch_size, -1)
         
-        # Use the encoder network to compute the values of latent layers
+        
+        # Get the latent layer
         latent_layer = self.encoder(x)
         
         # Split the latent layer into latent means and latent log vars
@@ -65,24 +88,23 @@ class DenseVAE(gluon.Block):
         # variable
         eps = nd.random_normal(loc=0,
                                scale=1,
-                               shape=(x.shape[0], self.n_latent),
+                               shape=(batch_size, self.n_latent),
                               ctx=CTX)
         latent_z = latent_mean + nd.exp(0.5 * latent_logvar) * eps
         
-        # Use the decoder to generate output, then flatten it to compute loss
-        x_hat_flattened = self.decoder(latent_z).reshape(x.shape[0], -1)
-        # Flatten input image array for computing loss
-        x_flattened = x.reshape(x.shape[0], -1)
+        # Use the decoder to generate output
+        x_hat = self.decoder(latent_z)        
         
         # Compute the KL_Divergence between latent variable and standard normal
-        KL_div_loss = - 0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
+        KL_div_loss = -0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
                                    axis=1)
         
         # Compute the content loss that is the cross entropy between the original image 
         # and the generated image
+        # content_loss = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=True)(x_hat, x.reshape(batch_size, -1))
+        
         # Add 1e-10 to prevent log(0) from happening
-        logloss = -nd.sum(x_flattened*nd.log(x_hat_flattened+1e-10)+
-                          (1-x_flattened)*nd.log(1-x_hat_flattened+1e-10), axis=1)
+        logloss = - nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
         
         # Sum up the loss
         loss = KL_div_loss + logloss
@@ -111,7 +133,7 @@ class DenseVAE(gluon.Block):
         latent_z = latent_mean + nd.exp(0.5 * latent_logvar) * eps
         
         # Use the decoder to generate output, then flatten it to compute loss
-        return self.decoder(latent_z)
+        return self.decoder(latent_z).reshape(-1, self.n_out_channels, self.out_width, self.out_height)
             
             
             
