@@ -33,7 +33,7 @@ _, n_channels, width, height = train_features.shape
 # Instantiate the model, then build the trainer and 
 # initialize the parameters
 dense_vae = DenseVAE(n_latent = 3,
-                    n_hlayers = 10,
+                    n_hlayers = 5,
                     n_hnodes = 400,
                     n_out_channels = n_channels,
                     out_width = width,
@@ -45,7 +45,7 @@ trainer = gluon.Trainer(dense_vae.collect_params(),
 
 
 
-n_epoch = 50
+n_epoch = 40
 for epoch in range(n_epoch):
     
     batch_losses = []
@@ -75,5 +75,5 @@ for i in range(10):
     img_array = img_arrays[i]
     fig = plt.figure()
     plt.imshow(img_array.reshape(width, height, n_channels))
-    plt.savefig('./results/images/DenseVAE_on_anime/10_10_400_50/' + str(i) + '.png')
+    plt.savefig('./results/images/DenseVAE_on_anime/3_5_400_40/' + str(i) + '.png')
     plt.close()

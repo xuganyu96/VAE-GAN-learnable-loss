@@ -6,14 +6,6 @@ import numpy as np
 import d2l
 CTX = d2l.try_gpu()
 
-# Import the Encoder and Decoder networks. All paths are
-# relative to the main directory
-import sys
-sys.path.insert(0, "./models/encoders")
-sys.path.insert(0, "./models/decoders")
-from DenseEncoder import DenseEncoder
-from DenseDecoder import DenseDecoder
-
 # This script provides a subclass of gluon.Block that is the
 # VAE network. The implementation is identical to that of the demo
 # provided in https://gluon.mxnet.io/chapter13_unsupervised-learning/vae-gluon.html
@@ -96,7 +88,7 @@ class DenseVAE(gluon.Block):
         x_hat = self.decoder(latent_z)        
         
         # Compute the KL_Divergence between latent variable and standard normal
-        KL_div_loss = -0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
+        self.KL_div_loss = -0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
                                    axis=1)
         
         # Compute the content loss that is the cross entropy between the original image 
@@ -104,10 +96,10 @@ class DenseVAE(gluon.Block):
         # content_loss = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=True)(x_hat, x.reshape(batch_size, -1))
         
         # Add 1e-10 to prevent log(0) from happening
-        logloss = - nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
+        self.logloss = - nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
         
         # Sum up the loss
-        loss = KL_div_loss + logloss
+        loss = self.KL_div_loss + self.logloss
         return loss
     
     def generate(self, x):
