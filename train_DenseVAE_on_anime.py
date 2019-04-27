@@ -32,8 +32,8 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the model, then build the trainer and 
 # initialize the parameters
-n_latent = 5
-n_hlayers = 5
+n_latent = 10
+n_hlayers = 10
 n_hnodes = 400
 dense_vae = DenseVAE(n_latent = n_latent,
                     n_hlayers = n_hlayers,
@@ -49,7 +49,7 @@ trainer = gluon.Trainer(dense_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_on_anime/5_5_400_40/'
+result_dir = './results/images/DenseVAE_on_anime/10_10_400_100/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
@@ -57,7 +57,7 @@ readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
 readme.write('Number of hidden layers \t' + str(n_hlayers) + '\n\n')
 readme.write('Number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
 
-n_epoch = 40
+n_epoch = 100
 readme.write('Number of epochs trained \t' + str(n_epoch) + '\n\n')
 for epoch in range(n_epoch):
     
@@ -96,7 +96,7 @@ for i in range(n_validations):
     img_array = img_arrays[i]
     fig = plt.figure()
     plt.imshow(img_array.reshape(width, height, n_channels))
-    plt.savefig('./results/images/DenseVAE_on_anime/5_5_400_40/' + str(i) + '.png')
+    plt.savefig(result_dir + str(i) + '.png')
     plt.close()
     
 readme.close()

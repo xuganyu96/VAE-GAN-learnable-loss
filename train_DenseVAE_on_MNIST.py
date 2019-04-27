@@ -94,7 +94,7 @@ for i in range(n_validations):
     img_array = img_arrays[i]
     fig = plt.figure()
     plt.imshow(img_array.reshape(width, height))
-    plt.savefig('./results/images/DenseVAE_on_MNIST/5_3_400_40/' + str(i) + '.png')
+    plt.savefig(result_dir + str(i) + '.png')
     plt.close()
     
 readme.close()

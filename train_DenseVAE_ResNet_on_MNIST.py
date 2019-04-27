@@ -86,6 +86,7 @@ for epoch in range(n_epochs):
             disc_scores = resnet(generated_features)
 
             batch_content_loss = loss_func(disc_scores, real_labels)
+            print(disc_score.shape, real_labels.shape, batch_content_loss.shape)
             
             # If it is the first epoch, ResNet is not ready for training
             # yet, so we use the pixel-by-pixel logloss for training
@@ -94,7 +95,6 @@ for epoch in range(n_epochs):
                 batch_content_loss = dense_vae.logloss
                 
             # Sum up the kl_div_loss and the content loss
-            print(batch_content_loss)
             batch_loss = batch_content_loss + batch_kl_div_loss
             vae_batch_losses.append(nd.mean(batch_loss).asscalar())
             
@@ -102,6 +102,13 @@ for epoch in range(n_epochs):
         batch_loss.backward()
         vae_trainer.step(batch_size)
         
+    for batch_features in train_iter:
+        batch_features = batch_features.as_in_context(CTX)
+        batch_size = batch_features.shape[0]
+        
+        # Generate some real labels so the generated_features
+        real_labels = nd.ones((batch_size,), ctx=CTX)
+        fake_labels = nd.zeros((batch_size,), ctx=CTX)
         # Update the discriminator network
         with autograd.record():
             # First train with real labels and genuine images
