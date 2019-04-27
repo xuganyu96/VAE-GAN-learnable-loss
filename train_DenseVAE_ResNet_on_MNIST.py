@@ -29,13 +29,16 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the VAE model, then build the trainer and 
 # initialize the parameters
-dense_vae = DenseVAE(n_latent = 2,
-                    n_hlayers = 10,
-                    n_hnodes = 400,
+n_latent = 2
+n_hlayers = 10
+n_hnodes = 400
+dense_vae = DenseVAE(n_latent = n_latent,
+                    n_hlayers = n_hlayers,
+                    n_hnodes = n_hnodes,
                     n_out_channels = n_channels,
                     out_width = width,
                     out_height = height)
-dense_vae.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
+dense_vae.collect_params().initialize(mx.init.Normal(0.02), ctx=CTX)
 vae_trainer = gluon.Trainer(dense_vae.collect_params(), 
                         'adam', 
                         {'learning_rate': .001})
@@ -43,7 +46,7 @@ vae_trainer = gluon.Trainer(dense_vae.collect_params(),
 # Instantiate the ResNet network, initialize it
 # and build the trainer instance
 resnet = ResNet(n_classes=1)
-resnet.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
+resnet.collect_params().initialize(mx.init.Normal(0.02), ctx=CTX)
 resnet_trainer = gluon.Trainer(resnet.collect_params(),
                                'adam',
                                {'learning_rate': 0.01})
@@ -52,9 +55,18 @@ resnet_trainer = gluon.Trainer(resnet.collect_params(),
 # I will write it out here and figure out what it means later
 loss_func = gloss.SigmoidBinaryCrossEntropyLoss()
 
+# Specify the directory to which validation images and training
+# report (with training errors and time for each epoch) will be
+# saved
+result_dir = './results/images/DenseVAE_ResNet_on_MNIST/2_10_400_50/'
+# Open a file to write to for training reports
+readme = open(result_dir + 'README.md', 'w')
+readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
+readme.write('Number of hidden layers \t' + str(n_hlayers) + '\n\n')
+readme.write('Number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
+
 n_epochs = 50
-
-
+readme.write('Number of epochs trained \t' + str(n_epochs) + '\n\n')
 
 for epoch in range(n_epochs):
     
@@ -85,8 +97,10 @@ for epoch in range(n_epochs):
             generated_features = dense_vae.generate(batch_features)
             disc_scores = resnet(generated_features)
 
+            # In training VAE, we want to maximize the closeness
+            # of disc_scores to "all ones"
+            # so we want to minimize its opposite
             batch_content_loss = loss_func(disc_scores, real_labels)
-            print(disc_score.shape, real_labels.shape, batch_content_loss.shape)
             
             # If it is the first epoch, ResNet is not ready for training
             # yet, so we use the pixel-by-pixel logloss for training
@@ -124,11 +138,11 @@ for epoch in range(n_epochs):
             fake_loss = loss_func(disc_scores, fake_labels)
             
             # Sum up the losses
-            batch_loss = real_loss + fake_loss
+            resnet_batch_loss = real_loss + fake_loss
             resnet_batch_losses.append(nd.mean(batch_loss).asscalar())
             
         # Descent on gradient
-        batch_loss.backward()
+        resnet_batch_loss.backward()
         # There are 2 times the batch_size samples used in this epoch of 
         # training the ResNet
         resnet_trainer.step(batch_size * 2)
@@ -138,31 +152,29 @@ for epoch in range(n_epochs):
     epoch_vae_train_loss = np.mean(vae_batch_losses)
     epoch_resnet_train_loss = np.mean(resnet_batch_losses)
     time_consumed = stop_time - start_time
-    print('Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.5f}, Time used {:.2f}'.format(epoch,
+    
+    # Generate the epoch report, write it to the report file and print it
+    epoch_report_str = 'Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.10f}, Time used {:.2f}'.format(epoch,
                                                                                                     epoch_vae_train_loss,
                                                                                                     epoch_resnet_train_loss,
-                                                                                                    time_consumed))
-                   
+                                                                                                    time_consumed)
+    readme.write(epoch_report_str + '\n\n')
+    print(epoch_report_str)
+    
+# Validation
+img_arrays = dense_vae.generate(nd.array(mnist['test_data'], ctx=CTX)).asnumpy()
 
+# Define the number of validation images to generate (and display in the README.md)
+n_validations = 10
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+for i in range(n_validations):
+    # Add a line that writes to the report to display the images
+    readme.write('!['+str(i)+'](./'+str(i)+'.png)')
+    img_array = img_arrays[i]
+    fig = plt.figure()
+    plt.imshow(img_array.reshape(width, height))
+    plt.savefig(result_dir + str(i) + '.png')
+    plt.close()
+    
+readme.close()
 
