@@ -8,13 +8,14 @@ CTX = d2l.try_gpu()
 import time
 import matplotlib.pyplot as plt
 
-# Import the DenseVAE and ResNet network classes
+# Import the DenseVAE and the DenseLogisticRegressor models
 import sys
 sys.path.insert(0, "./models")
 from DenseVAE import DenseVAE
 from ResNet import ResNet
 
 # Prepare the training data and training data iterator
+print("[STATE]: Loading data onto context")
 mnist = mx.test_utils.get_mnist()
 train_features = nd.array(mnist['train_data'], ctx=CTX)
 batch_size = 64
@@ -22,15 +23,15 @@ train_iter = gdata.DataLoader(train_features,
                                   batch_size,
                                  shuffle=True,
                                  last_batch='keep')
-
+print("[STATE]: Data loaded onto context")
 
 # Extract the training image's shape
 _, n_channels, width, height = train_features.shape
 
 # Instantiate the VAE model, then build the trainer and 
 # initialize the parameters
-n_latent = 2
-n_hlayers = 10
+n_latent = 5
+n_hlayers = 3
 n_hnodes = 400
 dense_vae = DenseVAE(n_latent = n_latent,
                     n_hlayers = n_hlayers,
@@ -38,130 +39,135 @@ dense_vae = DenseVAE(n_latent = n_latent,
                     n_out_channels = n_channels,
                     out_width = width,
                     out_height = height)
-dense_vae.collect_params().initialize(mx.init.Normal(0.02), ctx=CTX)
-vae_trainer = gluon.Trainer(dense_vae.collect_params(), 
+dense_vae.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
+dense_vae_trainer = gluon.Trainer(dense_vae.collect_params(), 
                         'adam', 
                         {'learning_rate': .001})
 
-# Instantiate the ResNet network, initialize it
-# and build the trainer instance
+# Instantiate the ResNet network, initialize its paramters
+# and instantiate the trainer instance
 resnet = ResNet(n_classes=1)
-resnet.collect_params().initialize(mx.init.Normal(0.02), ctx=CTX)
+resnet.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
 resnet_trainer = gluon.Trainer(resnet.collect_params(),
                                'adam',
-                               {'learning_rate': 0.01})
-
-# The MXNet GAN implementation used a SigmoidBinaryCrossEntropyLOss
-# I will write it out here and figure out what it means later
-loss_func = gloss.SigmoidBinaryCrossEntropyLoss()
+                               {'learning_rate': 0.001})
 
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
 result_dir = './results/images/DenseVAE_ResNet_on_MNIST/5_3_400_50/'
+
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
-readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
-readme.write('Number of hidden layers \t' + str(n_hlayers) + '\n\n')
-readme.write('Number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
+readme.write('VAE number of latent variables \t' + str(n_latent) + '\n\n')
+readme.write('VAE number of hidden layers \t' + str(n_hlayers) + '\n\n')
+readme.write('VAE number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
 
+# Define the loss function for training the discriminator (the logreg)
+disc_loss_func = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=False)
+
+# Define the number of epochs to train
 n_epochs = 50
 readme.write('Number of epochs trained \t' + str(n_epochs) + '\n\n')
 
+print("[STATE]: Training started")
 for epoch in range(n_epochs):
     
-    # Start recording trainig time
+    # Start recording epoch training time
     start_time = time.time()
-    # Initialize a list that records the average loss within
-    # each batch
-    vae_batch_losses = []
+    
+    # Initialize a list that records the average loss within each batch
+    dense_vae_batch_losses = []
     resnet_batch_losses = []
     
-    
+    # Iterate through all possible batches
     for batch_features in train_iter:
         batch_features = batch_features.as_in_context(CTX)
         batch_size = batch_features.shape[0]
         
-        # Generate some real labels so the generated_features
-        real_labels = nd.ones((batch_size,), ctx=CTX)
-        fake_labels = nd.zeros((batch_size,), ctx=CTX)
+        # Generate the labels of 1 and 0s, with 1 representing an image
+        # being genuine while the 0 representing an image being
+        # generated
+        genuine_labels = nd.ones((batch_size,), ctx=CTX)
+        generated_labels = nd.zeros((batch_size,), ctx=CTX)
         
-        # First train the VAE to get a baseline generator
+        ############################################################################
+        # UPDATE THE DISCRIMINATOR NETWORK
+        ############################################################################
         with autograd.record():
-            # Make a pass on "forward", which will get the KL_Div loss
-            # and the logloss to be assigned into instance attributes
-            dense_vae(batch_features)
-            batch_kl_div_loss = dense_vae.KL_div_loss
             
-            # Use the ResNet to compute a confidence score, then com
+            # Train with genuine images: make predictions on genuine images
+            genuine_logit_preds = resnet(batch_features)
+            genuine_loss = disc_loss_func(genuine_logit_preds, genuine_labels)
+            
+            # Train with generated images: make predictions on generated images
             generated_features = dense_vae.generate(batch_features)
-            disc_scores = resnet(generated_features)
-
-            # In training VAE, we want to maximize the closeness
-            # of disc_scores to "all ones"
-            # so we want to minimize its opposite
-            batch_content_loss = loss_func(disc_scores, real_labels)
+            generated_logit_preds = resnet(generated_features)
+            generated_loss = disc_loss_func(generated_logit_preds, generated_labels)
             
-            # If it is the first epoch, ResNet is not ready for training
-            # yet, so we use the pixel-by-pixel logloss for training
-            # the VAE net
-            if epoch == 0:
-                batch_content_loss = dense_vae.logloss
-                
+            # Total loss is loss with genuine and with generated images
+            disc_loss = genuine_loss + generated_loss
+            disc_loss.backward()
+            resnet_batch_losses.append(nd.mean(disc_loss).asscalar())
+            
+        # update the parameters in the logreg
+        resnet_trainer.step(batch_size)
+        
+        ############################################################################
+        # UPDATE THE VAE NETWORK
+        ############################################################################
+        with autograd.record():
+            
+#             # Make a pass on "forward", which will get the kl_div loss 
+#             # and the logloss to be assigned into instance attributes
+#             dense_vae.forward(batch_features)
+#             batch_kl_div_loss = dense_vae.KL_div_loss
+#             batch_pbp_loss = dense_vae.logloss
+            
+            # Compute the content loss by letting the logreg network make predictions
+            # on the generated images
+            generated_features = dense_vae.generate(batch_features)
+            generated_logit_preds = resnet(generated_features)
+            batch_disc_loss = disc_loss_func(generated_logit_preds, genuine_labels)
+            
             # Sum up the kl_div_loss and the content loss
-            batch_loss = batch_content_loss + batch_kl_div_loss
-            vae_batch_losses.append(nd.mean(batch_loss).asscalar())
+            gen_loss = dense_vae(batch_features) + batch_disc_loss
+            gen_loss.backward()
+            dense_vae_batch_losses.append(nd.mean(gen_loss).asscalar())
             
-        # Descent on gradient!
-        batch_loss.backward()
-        vae_trainer.step(batch_size)
-        
-    for batch_features in train_iter:
-        batch_features = batch_features.as_in_context(CTX)
-        batch_size = batch_features.shape[0]
-        
-        # Generate some real labels so the generated_features
-        real_labels = nd.ones((batch_size,), ctx=CTX)
-        fake_labels = nd.zeros((batch_size,), ctx=CTX)
-        # Update the discriminator network
-        with autograd.record():
-            # First train with real labels and genuine images
-            disc_scores = resnet(batch_features)
-            # Compute the loss with real data
-            real_loss = loss_func(disc_scores, real_labels)
+        # Update the parameters in the dense vae
+        dense_vae_trainer.step(batch_size)
             
-            # Generate the fake images
-            generated_features = dense_vae.generate(batch_features)
-            # COmpute the results from fake images
-            disc_scores = resnet(generated_features)
-            # Compute the loss with the fake data
-            fake_loss = loss_func(disc_scores, fake_labels)
-            
-            # Sum up the losses
-            resnet_batch_loss = real_loss + fake_loss
-            resnet_batch_losses.append(nd.mean(batch_loss).asscalar())
-            
-        # Descent on gradient
-        resnet_batch_loss.backward()
-        # There are 2 times the batch_size samples used in this epoch of 
-        # training the ResNet
-        resnet_trainer.step(batch_size * 2)
-    
-    # End of an epoch, counting batch losses and time used
+    ############################################################################
+    # NEAR THE END OF THIS EPOCH
+    ############################################################################
+
+    # Compute some summarical metrics of this epoch
     stop_time = time.time()
-    epoch_vae_train_loss = np.mean(vae_batch_losses)
-    epoch_resnet_train_loss = np.mean(resnet_batch_losses)
     time_consumed = stop_time - start_time
+    epoch_resnet_train_loss = np.mean(resnet_batch_losses)
+    epoch_dense_vae_train_loss = np.mean(dense_vae_batch_losses)
     
-    # Generate the epoch report, write it to the report file and print it
-    epoch_report_str = 'Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.10f}, Time used {:.2f}'.format(epoch,
-                                                                                                    epoch_vae_train_loss,
-                                                                                                    epoch_resnet_train_loss,
-                                                                                                    time_consumed)
-    readme.write(epoch_report_str + '\n\n')
-    print(epoch_report_str)
+    # Use the updated LogReg to make predictions on training data again
+    # to see how accurately LogReg can identify genuine images from
+    # generated images
+    # First check how well it identifies genuine images
+    genuine_acc = nd.mean(nd.round(nd.sigmoid(resnet(train_features)))).asscalar()
+    generated_features = dense_vae.generate(train_features)
+    generated_acc = 1 - nd.mean(nd.round(nd.sigmoid(resnet(generated_features)))).asscalar()
+    train_acc = 0.5 * (genuine_acc + generated_acc)
     
-# Validation
+    # Generate the epoch report
+    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.10f}, ResNet Training Acc {:.3f}, Time used {:.2f}'
+    epoch_report = epoch_report.format(epoch,
+                                       epoch_dense_vae_train_loss,
+                                       epoch_resnet_train_loss,
+                                       train_acc,
+                                       time_consumed)
+    readme.write(epoch_report + '\n\n')
+    print(epoch_report)
+    
+# Validation and output validation images
 img_arrays = dense_vae.generate(nd.array(mnist['test_data'], ctx=CTX)).asnumpy()
 
 # Define the number of validation images to generate (and display in the README.md)
@@ -177,4 +183,48 @@ for i in range(n_validations):
     plt.close()
     
 readme.close()
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

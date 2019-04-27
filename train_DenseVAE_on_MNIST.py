@@ -45,7 +45,7 @@ trainer = gluon.Trainer(dense_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_on_MNIST/5_3_400_40/'
+result_dir = './results/images/DenseVAE_on_MNIST/5_3_400_50/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
@@ -54,7 +54,7 @@ readme.write('Number of hidden layers \t' + str(n_hlayers) + '\n\n')
 readme.write('Number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
 
 # Define the number of epochs
-n_epoch = 40
+n_epoch = 50
 readme.write('Number of epochs trained \t' + str(n_epoch) + '\n\n')
 for epoch in range(n_epoch):
     
