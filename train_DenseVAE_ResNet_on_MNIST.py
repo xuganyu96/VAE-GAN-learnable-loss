@@ -58,7 +58,7 @@ loss_func = gloss.SigmoidBinaryCrossEntropyLoss()
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_ResNet_on_MNIST/2_10_400_50/'
+result_dir = './results/images/DenseVAE_ResNet_on_MNIST/5_3_400_50/'
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
 readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
