@@ -48,14 +48,14 @@ trainer = gluon.Trainer(conv_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_on_anime/5_32_50/'
+result_dir = './results/images/ConvVAE_on_anime/5_32_100/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
 readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
 readme.write('Number of base channels \t' + str(n_base_channels) + '\n\n')
 
-n_epoch = 50
+n_epoch = 100
 readme.write('Number of epochs trained \t' + str(n_epoch) + '\n\n')
 for epoch in range(n_epoch):
     
