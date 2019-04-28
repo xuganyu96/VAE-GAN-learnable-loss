@@ -21,7 +21,37 @@ A VAE with 5 latent variables, 3 hidden dense layers per encoder/decoder, 400 hi
 
 <img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/0.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/1.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/2.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/3.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/4.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/5.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/6.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/7.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/8.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/9.png" alt="drawing" width="80"/>
 
-
-
 ### Analysis of results from MNIST training sets
 As shown from the images above, a variational autoencoder with simple architecture (consisting solely of dense layers) is already capable of reconstructing handwritten digits to reasonably satisfactory eligibility. However, by attaching even just a simple binary logistic regressor with 1 hidden dense layers, the VAE was trained with more attention to details otherwise not revealed by a pixel-by-pixel losss. Visible sharpening of handwritten digits especially around the edges can be observed.
+
+## Experiments on anime faces
+A set of [anime-styled face images](https://github.com/Mckinsey666/Anime-Face-Dataset) is used as training set to train a number of different variational autoencoders and combinations of variational autoencoder with discriminators. 
+
+### Dense VAE with BCE loss as PBP loss
+A VAE with 512 latent variables, 5 hidden dense layers per encoder/decoder, 1024 hidden nodes per hidden layer, and binary cross entropy as pixel-by-pixel loss is trained on the first 80% of the dataset for 200 epochs. The remaning 20% is used to generate the validation images. The results are stored in `./results/images/DenseVAE_on_anime/512_5_1024_200/`
+
+<img src="./results/images/DenseVAE_on_anime/512_5_1024_200/0.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/1.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/2.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/3.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/4.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/5.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/6.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/7.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/8.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_anime/512_5_1024_200/9.png" alt="drawing" width="80"/>
+
+### Dense VAE with BCE loss as PBP loss + Dense logistic regressor
+A dense VAE with 512 latent variables, 5 hidden dense layers per encoder/decoder, 1024 nodes per hidden layer, and BCE as pixel-by-pixel loss is trained against a dense logistic regressor with 1 hidden layer and 1024 nodes per hidden layer on the first 80% of the dataset. The results are stored in `./results/images/DenseVAE_on_anime/512_5_1024_200/`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
