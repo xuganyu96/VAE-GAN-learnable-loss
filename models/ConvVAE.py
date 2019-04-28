@@ -34,12 +34,12 @@ class ConvVAE(gluon.Block):
             self.encoder.add(nn.Conv2D(n_base_channels * 2, kernel_size=4, use_bias=False),
                              nn.BatchNorm(),
                              nn.Activation('relu'))
-#             self.encoder.add(nn.Conv2D(n_base_channels * 4, kernel_size=4, use_bias=False),
-#                              nn.BatchNorm(),
-#                              nn.Activation('relu'))
-#             self.encoder.add(nn.Conv2D(n_base_channels * 8, kernel_size=4, use_bias=False),
-#                              nn.BatchNorm(),
-#                              nn.Activation('relu'))
+            self.encoder.add(nn.Conv2D(n_base_channels * 4, kernel_size=4, use_bias=False),
+                             nn.BatchNorm(),
+                             nn.Activation('relu'))
+            self.encoder.add(nn.Conv2D(n_base_channels * 8, kernel_size=4, use_bias=False),
+                             nn.BatchNorm(),
+                             nn.Activation('relu'))
             # Add a final output layer that is 2 times the number of 
             # latent variables
             self.encoder.add(nn.Dense(2 * n_latent),
