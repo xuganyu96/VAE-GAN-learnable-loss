@@ -112,6 +112,10 @@ for epoch in range(n_epochs):
             
         # update the parameters in the logreg
         resnet_trainer.step(batch_size)
+#         genuine_acc = nd.mean(nd.round(nd.sigmoid(resnet(train_features)))).asscalar()
+#         generated_features = dense_vae.generate(train_features)
+#         generated_acc = 1 - nd.mean(nd.round(nd.sigmoid(resnet(generated_features)))).asscalar()
+#         print(genuine_acc, generated_acc)
         
         ############################################################################
         # UPDATE THE VAE NETWORK

@@ -14,6 +14,7 @@ sys.path.insert(0, "./models")
 from DenseVAE import DenseVAE
 
 all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
+all_features = nd.shuffle(all_features)
 
 # Use 80% of the data as training data
 # since the anime faces have no particular order, just take the first
@@ -32,8 +33,8 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the model, then build the trainer and 
 # initialize the parameters
-n_latent = 10
-n_hlayers = 10
+n_latent = 5
+n_hlayers = 5
 n_hnodes = 400
 dense_vae = DenseVAE(n_latent = n_latent,
                     n_hlayers = n_hlayers,
@@ -49,7 +50,7 @@ trainer = gluon.Trainer(dense_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_on_anime/10_10_400_100/'
+result_dir = './results/images/DenseVAE_on_anime/5_5_400_50/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
@@ -57,7 +58,7 @@ readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
 readme.write('Number of hidden layers \t' + str(n_hlayers) + '\n\n')
 readme.write('Number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
 
-n_epoch = 100
+n_epoch = 50
 readme.write('Number of epochs trained \t' + str(n_epoch) + '\n\n')
 for epoch in range(n_epoch):
     
@@ -93,10 +94,14 @@ n_validations = 10
 for i in range(n_validations):
     # Add a line that writes to the report to display the images
     readme.write('!['+str(i)+'](./'+str(i)+'.png)')
+    readme.write('!['+str(i)+'](./test_'+str(i)+'.png)')
     img_array = img_arrays[i]
     fig = plt.figure()
     plt.imshow(img_array.reshape(width, height, n_channels))
     plt.savefig(result_dir + str(i) + '.png')
+    plt.close()
+    plt.imshow(test_features[i].reshape((width, height, n_channels)).asnumpy())
+    plt.savefig(result_dir + 'test_' + str(i) + '.png')
     plt.close()
     
 readme.close()

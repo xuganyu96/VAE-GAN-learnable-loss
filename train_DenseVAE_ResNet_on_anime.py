@@ -12,12 +12,11 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.insert(0, "./models")
 from DenseVAE import DenseVAE
-from DenseLogisticRegressor import DenseLogisticRegressor as DenseLogReg
+from ResNet import ResNet
 
 # Prepare the training data and training data iterator
 print("[STATE]: Loading data onto context")
 all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
-all_features = nd.shuffle(all_features)
 
 # Use 80% of the data as training data
 # since the anime faces have no particular order, just take the first
@@ -52,33 +51,24 @@ dense_vae_trainer = gluon.Trainer(dense_vae.collect_params(),
                         'adam', 
                         {'learning_rate': .001})
 
-# Instantiate the logistic regression model, initialize its paramters
+# Instantiate the ResNet network, initialize its paramters
 # and instantiate the trainer instance
-logreg_n_hlayers = 2
-logreg_n_hnodes = 200
-logreg = DenseLogReg(n_hlayers = logreg_n_hlayers,
-                    n_hnodes = logreg_n_hnodes)
-logreg.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
-logreg_trainer = gluon.Trainer(logreg.collect_params(),
+resnet = ResNet(n_classes=1)
+resnet.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
+resnet_trainer = gluon.Trainer(resnet.collect_params(),
                                'adam',
                                {'learning_rate': 0.001})
-
-# Define a discriminator amplifier constant that multiplies the discriminator
-# loss in the generator training cycle
-disc_loss_multiplier = 10
 
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/10_10_400_1_200_50_10/'
+result_dir = './results/images/DenseVAE_ResNet_on_anime/10_10_400_50/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
 readme.write('VAE number of latent variables \t' + str(n_latent) + '\n\n')
 readme.write('VAE number of hidden layers \t' + str(n_hlayers) + '\n\n')
 readme.write('VAE number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
-readme.write('LogReg number of hidden layers \t' + str(logreg_n_hlayers) + '\n\n')
-readme.write('LogReg number of hidden nodes per layer \t' + str(logreg_n_hnodes) + '\n\n')
 
 # Define the loss function for training the discriminator (the logreg)
 disc_loss_func = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=False)
@@ -95,7 +85,7 @@ for epoch in range(n_epochs):
     
     # Initialize a list that records the average loss within each batch
     dense_vae_batch_losses = []
-    logreg_batch_losses = []
+    resnet_batch_losses = []
     
     # Iterate through all possible batches
     for batch_features in train_iter:
@@ -114,21 +104,25 @@ for epoch in range(n_epochs):
         with autograd.record():
             
             # Train with genuine images: make predictions on genuine images
-            genuine_logit_preds = logreg(batch_features)
+            genuine_logit_preds = resnet(batch_features)
             genuine_loss = disc_loss_func(genuine_logit_preds, genuine_labels)
             
             # Train with generated images: make predictions on generated images
             generated_features = dense_vae.generate(batch_features)
-            generated_logit_preds = logreg(generated_features)
+            generated_logit_preds = resnet(generated_features)
             generated_loss = disc_loss_func(generated_logit_preds, generated_labels)
             
             # Total loss is loss with genuine and with generated images
             disc_loss = genuine_loss + generated_loss
             disc_loss.backward()
-            logreg_batch_losses.append(nd.mean(disc_loss).asscalar())
+            resnet_batch_losses.append(nd.mean(disc_loss).asscalar())
             
         # update the parameters in the logreg
-        logreg_trainer.step(batch_size)
+        resnet_trainer.step(batch_size)
+#         genuine_acc = nd.mean(nd.round(nd.sigmoid(resnet(train_features)))).asscalar()
+#         generated_features = dense_vae.generate(train_features)
+#         generated_acc = 1 - nd.mean(nd.round(nd.sigmoid(resnet(generated_features)))).asscalar()
+#         print(genuine_acc, generated_acc)
         
         ############################################################################
         # UPDATE THE VAE NETWORK
@@ -144,11 +138,11 @@ for epoch in range(n_epochs):
             # Compute the content loss by letting the logreg network make predictions
             # on the generated images
             generated_features = dense_vae.generate(batch_features)
-            generated_logit_preds = logreg(generated_features)
+            generated_logit_preds = resnet(generated_features)
             batch_disc_loss = disc_loss_func(generated_logit_preds, genuine_labels)
             
-            # Sum up the VAE loss and the discriminator loss (with multiplier)
-            gen_loss = dense_vae(batch_features) + batch_disc_loss * disc_loss_multiplier
+            # Sum up the kl_div_loss and the content loss
+            gen_loss = dense_vae(batch_features) + batch_disc_loss
             gen_loss.backward()
             dense_vae_batch_losses.append(nd.mean(gen_loss).asscalar())
             
@@ -162,23 +156,23 @@ for epoch in range(n_epochs):
     # Compute some summarical metrics of this epoch
     stop_time = time.time()
     time_consumed = stop_time - start_time
-    epoch_logreg_train_loss = np.mean(logreg_batch_losses)
+    epoch_resnet_train_loss = np.mean(resnet_batch_losses)
     epoch_dense_vae_train_loss = np.mean(dense_vae_batch_losses)
     
     # Use the updated LogReg to make predictions on training data again
     # to see how accurately LogReg can identify genuine images from
     # generated images
     # First check how well it identifies genuine images
-    genuine_acc = nd.mean(nd.round(nd.sigmoid(logreg(train_features)))).asscalar()
+    genuine_acc = nd.mean(nd.round(nd.sigmoid(resnet(train_features)))).asscalar()
     generated_features = dense_vae.generate(train_features)
-    generated_acc = 1 - nd.mean(nd.round(nd.sigmoid(logreg(generated_features)))).asscalar()
+    generated_acc = 1 - nd.mean(nd.round(nd.sigmoid(resnet(generated_features)))).asscalar()
     train_acc = 0.5 * (genuine_acc + generated_acc)
     
     # Generate the epoch report
-    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, LogReg Training loss {:.10f}, LogReg Training Acc {:.3f}, Time used {:.2f}'
+    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.10f}, ResNet Training Acc {:.3f}, Time used {:.2f}'
     epoch_report = epoch_report.format(epoch,
                                        epoch_dense_vae_train_loss,
-                                       epoch_logreg_train_loss,
+                                       epoch_resnet_train_loss,
                                        train_acc,
                                        time_consumed)
     readme.write(epoch_report + '\n\n')
@@ -193,14 +187,10 @@ n_validations = 10
 for i in range(n_validations):
     # Add a line that writes to the report to display the images
     readme.write('!['+str(i)+'](./'+str(i)+'.png)')
-    readme.write('!['+str(i)+'](./test_'+str(i)+'.png)')
     img_array = img_arrays[i]
     fig = plt.figure()
     plt.imshow(img_array.reshape(width, height, n_channels))
     plt.savefig(result_dir + str(i) + '.png')
-    plt.close()
-    plt.imshow(test_features[i].reshape((width, height, n_channels)).asnumpy())
-    plt.savefig(result_dir + 'test_' + str(i) + '.png')
     plt.close()
     
 readme.close()

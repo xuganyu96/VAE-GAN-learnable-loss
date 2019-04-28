@@ -6,204 +6,204 @@ Number of hidden nodes per layer 	400
 
 Number of epochs trained 	100
 
-Epoch0, Training loss 7539.8413085938, Time used 3.36
+Epoch0, Training loss 8906.5498046875, Time used 3.34
 
-Epoch1, Training loss 7186.5307617188, Time used 3.19
+Epoch1, Training loss 7178.5083007812, Time used 3.21
 
-Epoch2, Training loss 7184.2192382812, Time used 3.19
+Epoch2, Training loss 7083.2749023438, Time used 3.22
 
-Epoch3, Training loss 7158.1293945312, Time used 3.19
+Epoch3, Training loss 7058.5175781250, Time used 3.22
 
-Epoch4, Training loss 7075.9594726562, Time used 3.19
+Epoch4, Training loss 7052.2167968750, Time used 3.18
 
-Epoch5, Training loss 7056.4384765625, Time used 3.20
+Epoch5, Training loss 7049.9213867188, Time used 3.22
 
-Epoch6, Training loss 7052.3759765625, Time used 3.19
+Epoch6, Training loss 7040.9370117188, Time used 3.20
 
-Epoch7, Training loss 7042.5737304688, Time used 3.19
+Epoch7, Training loss 7035.1655273438, Time used 3.21
 
-Epoch8, Training loss 7040.7016601562, Time used 3.19
+Epoch8, Training loss 7039.6425781250, Time used 3.20
 
-Epoch9, Training loss 7045.2358398438, Time used 3.20
+Epoch9, Training loss 7055.1416015625, Time used 3.22
 
-Epoch10, Training loss 7108.2807617188, Time used 3.20
+Epoch10, Training loss 7043.5541992188, Time used 3.21
 
-Epoch11, Training loss 7151.9907226562, Time used 3.21
+Epoch11, Training loss 7030.8046875000, Time used 3.22
 
-Epoch12, Training loss 7044.9277343750, Time used 3.17
+Epoch12, Training loss 7048.1010742188, Time used 3.22
 
-Epoch13, Training loss 7036.4531250000, Time used 3.19
+Epoch13, Training loss 7045.2456054688, Time used 3.23
 
-Epoch14, Training loss 7041.7631835938, Time used 3.18
+Epoch14, Training loss 7030.4980468750, Time used 3.22
 
-Epoch15, Training loss 7040.2294921875, Time used 3.17
+Epoch15, Training loss 7031.8564453125, Time used 3.20
 
-Epoch16, Training loss 7035.1953125000, Time used 3.16
+Epoch16, Training loss 7033.5659179688, Time used 3.22
 
-Epoch17, Training loss 7020.4160156250, Time used 3.19
+Epoch17, Training loss 7034.8627929688, Time used 3.19
 
-Epoch18, Training loss 7044.4907226562, Time used 3.19
+Epoch18, Training loss 7009.6850585938, Time used 3.19
 
-Epoch19, Training loss 7035.1806640625, Time used 3.19
+Epoch19, Training loss 7090.1665039062, Time used 3.20
 
-Epoch20, Training loss 7014.2407226562, Time used 3.20
+Epoch20, Training loss 7172.3535156250, Time used 3.18
 
-Epoch21, Training loss 7020.2436523438, Time used 3.19
+Epoch21, Training loss 7172.3232421875, Time used 3.20
 
-Epoch22, Training loss 7050.8242187500, Time used 3.19
+Epoch22, Training loss 7105.9340820312, Time used 3.20
 
-Epoch23, Training loss 7025.0122070312, Time used 3.19
+Epoch23, Training loss 7030.0258789062, Time used 3.19
 
-Epoch24, Training loss 7040.4648437500, Time used 3.19
+Epoch24, Training loss 7018.6372070312, Time used 3.24
 
-Epoch25, Training loss 7024.1010742188, Time used 3.20
+Epoch25, Training loss 7019.1533203125, Time used 3.23
 
-Epoch26, Training loss 7034.7006835938, Time used 3.19
+Epoch26, Training loss 7022.4560546875, Time used 3.22
 
-Epoch27, Training loss 7023.9785156250, Time used 3.20
+Epoch27, Training loss 7034.1835937500, Time used 3.20
 
-Epoch28, Training loss 7016.1210937500, Time used 3.20
+Epoch28, Training loss 7018.8955078125, Time used 3.22
 
-Epoch29, Training loss 7016.1240234375, Time used 3.20
+Epoch29, Training loss 7004.9213867188, Time used 3.22
 
-Epoch30, Training loss 7005.8906250000, Time used 3.20
+Epoch30, Training loss 7023.7148437500, Time used 3.22
 
-Epoch31, Training loss 7031.3999023438, Time used 3.19
+Epoch31, Training loss 7027.1733398438, Time used 3.22
 
-Epoch32, Training loss 7062.6918945312, Time used 3.20
+Epoch32, Training loss 6996.5371093750, Time used 3.28
 
-Epoch33, Training loss 7007.9658203125, Time used 3.20
+Epoch33, Training loss 7023.5351562500, Time used 3.24
 
-Epoch34, Training loss 7003.9218750000, Time used 3.20
+Epoch34, Training loss 7023.4956054688, Time used 3.25
 
-Epoch35, Training loss 7000.5239257812, Time used 3.20
+Epoch35, Training loss 7017.5273437500, Time used 3.31
 
-Epoch36, Training loss 7022.4335937500, Time used 3.19
+Epoch36, Training loss 7028.0092773438, Time used 3.39
 
-Epoch37, Training loss 7003.0332031250, Time used 3.19
+Epoch37, Training loss 7044.0678710938, Time used 3.35
 
-Epoch38, Training loss 6998.3398437500, Time used 3.18
+Epoch38, Training loss 7023.0312500000, Time used 3.34
 
-Epoch39, Training loss 7024.7397460938, Time used 3.18
+Epoch39, Training loss 7039.3886718750, Time used 3.23
 
-Epoch40, Training loss 7016.8071289062, Time used 3.17
+Epoch40, Training loss 7014.8120117188, Time used 3.25
 
-Epoch41, Training loss 7004.0688476562, Time used 3.18
+Epoch41, Training loss 7024.2690429688, Time used 3.25
 
-Epoch42, Training loss 7001.2021484375, Time used 3.17
+Epoch42, Training loss 7017.4809570312, Time used 3.23
 
-Epoch43, Training loss 6999.8750000000, Time used 3.15
+Epoch43, Training loss 7028.3647460938, Time used 3.20
 
-Epoch44, Training loss 7020.5415039062, Time used 3.13
+Epoch44, Training loss 7003.6005859375, Time used 3.26
 
-Epoch45, Training loss 7029.4057617188, Time used 3.15
+Epoch45, Training loss 7032.9516601562, Time used 3.25
 
-Epoch46, Training loss 7010.3193359375, Time used 3.17
+Epoch46, Training loss 7029.3691406250, Time used 3.24
 
-Epoch47, Training loss 7029.1953125000, Time used 3.15
+Epoch47, Training loss 7056.4711914062, Time used 3.22
 
-Epoch48, Training loss 7004.8618164062, Time used 3.13
+Epoch48, Training loss 7027.1230468750, Time used 3.22
 
-Epoch49, Training loss 7015.6904296875, Time used 3.14
+Epoch49, Training loss 7030.7490234375, Time used 3.24
 
-Epoch50, Training loss 7006.0341796875, Time used 3.13
+Epoch50, Training loss 7012.5400390625, Time used 3.22
 
-Epoch51, Training loss 7055.4082031250, Time used 3.13
+Epoch51, Training loss 7021.2368164062, Time used 3.22
 
-Epoch52, Training loss 7010.2065429688, Time used 3.14
+Epoch52, Training loss 7006.1640625000, Time used 3.22
 
-Epoch53, Training loss 7023.4912109375, Time used 3.13
+Epoch53, Training loss 7014.1665039062, Time used 3.20
 
-Epoch54, Training loss 7027.7807617188, Time used 3.07
+Epoch54, Training loss 7014.5517578125, Time used 3.22
 
-Epoch55, Training loss 7023.2226562500, Time used 3.09
+Epoch55, Training loss 7016.8793945312, Time used 3.41
 
-Epoch56, Training loss 7004.8510742188, Time used 3.07
+Epoch56, Training loss 7002.3027343750, Time used 3.25
 
-Epoch57, Training loss 6995.4853515625, Time used 3.07
+Epoch57, Training loss 7002.7631835938, Time used 3.21
 
-Epoch58, Training loss 7005.1816406250, Time used 3.07
+Epoch58, Training loss 7003.6870117188, Time used 3.20
 
-Epoch59, Training loss 7047.9331054688, Time used 3.10
+Epoch59, Training loss 6992.6914062500, Time used 3.20
 
-Epoch60, Training loss 7032.1469726562, Time used 3.08
+Epoch60, Training loss 7007.0639648438, Time used 3.21
 
-Epoch61, Training loss 7004.5883789062, Time used 3.08
+Epoch61, Training loss 7024.9960937500, Time used 3.21
 
-Epoch62, Training loss 6998.0322265625, Time used 3.12
+Epoch62, Training loss 7008.6635742188, Time used 3.34
 
-Epoch63, Training loss 7004.1171875000, Time used 3.08
+Epoch63, Training loss 7007.8461914062, Time used 3.43
 
-Epoch64, Training loss 7011.0415039062, Time used 3.15
+Epoch64, Training loss 7015.2456054688, Time used 3.33
 
-Epoch65, Training loss 7017.0815429688, Time used 3.17
+Epoch65, Training loss 6999.7084960938, Time used 3.19
 
-Epoch66, Training loss 7021.5175781250, Time used 3.17
+Epoch66, Training loss 7013.3979492188, Time used 3.23
 
-Epoch67, Training loss 7013.9340820312, Time used 3.16
+Epoch67, Training loss 7007.0400390625, Time used 3.24
 
-Epoch68, Training loss 7015.1523437500, Time used 3.12
+Epoch68, Training loss 7014.9287109375, Time used 3.23
 
-Epoch69, Training loss 7034.3232421875, Time used 3.08
+Epoch69, Training loss 7013.8046875000, Time used 3.22
 
-Epoch70, Training loss 7017.1206054688, Time used 3.08
+Epoch70, Training loss 7009.0517578125, Time used 3.23
 
-Epoch71, Training loss 7018.3510742188, Time used 3.08
+Epoch71, Training loss 7000.4863281250, Time used 3.23
 
-Epoch72, Training loss 7012.4062500000, Time used 3.08
+Epoch72, Training loss 7018.2294921875, Time used 3.23
 
-Epoch73, Training loss 7009.8066406250, Time used 3.08
+Epoch73, Training loss 7014.0654296875, Time used 3.22
 
-Epoch74, Training loss 7019.1396484375, Time used 3.09
+Epoch74, Training loss 7002.2470703125, Time used 3.23
 
-Epoch75, Training loss 7007.5854492188, Time used 3.09
+Epoch75, Training loss 7014.9326171875, Time used 3.23
 
-Epoch76, Training loss 7002.6723632812, Time used 3.08
+Epoch76, Training loss 7004.1064453125, Time used 3.22
 
-Epoch77, Training loss 7019.2456054688, Time used 3.08
+Epoch77, Training loss 7009.7636718750, Time used 3.21
 
-Epoch78, Training loss 7016.0722656250, Time used 3.08
+Epoch78, Training loss 7026.0546875000, Time used 3.21
 
-Epoch79, Training loss 7031.9140625000, Time used 3.08
+Epoch79, Training loss 6991.1909179688, Time used 3.19
 
-Epoch80, Training loss 7038.1206054688, Time used 3.08
+Epoch80, Training loss 6999.6962890625, Time used 3.19
 
-Epoch81, Training loss 7035.7368164062, Time used 3.11
+Epoch81, Training loss 7001.7089843750, Time used 3.18
 
-Epoch82, Training loss 7033.5961914062, Time used 3.08
+Epoch82, Training loss 7007.8784179688, Time used 3.20
 
-Epoch83, Training loss 7031.7128906250, Time used 3.08
+Epoch83, Training loss 7004.6699218750, Time used 3.20
 
-Epoch84, Training loss 7019.4340820312, Time used 3.08
+Epoch84, Training loss 7016.2314453125, Time used 3.22
 
-Epoch85, Training loss 7033.7714843750, Time used 3.08
+Epoch85, Training loss 7027.8813476562, Time used 3.18
 
-Epoch86, Training loss 7034.4516601562, Time used 3.08
+Epoch86, Training loss 7014.2978515625, Time used 3.19
 
-Epoch87, Training loss 7031.4472656250, Time used 3.08
+Epoch87, Training loss 6994.9125976562, Time used 3.19
 
-Epoch88, Training loss 7035.2934570312, Time used 3.09
+Epoch88, Training loss 6992.6401367188, Time used 3.17
 
-Epoch89, Training loss 7031.1879882812, Time used 3.09
+Epoch89, Training loss 6997.6025390625, Time used 3.20
 
-Epoch90, Training loss 7028.4755859375, Time used 3.09
+Epoch90, Training loss 6985.7993164062, Time used 3.18
 
-Epoch91, Training loss 7025.6254882812, Time used 3.08
+Epoch91, Training loss 6988.8652343750, Time used 3.18
 
-Epoch92, Training loss 7025.5815429688, Time used 3.08
+Epoch92, Training loss 7012.7832031250, Time used 3.18
 
-Epoch93, Training loss 7019.5488281250, Time used 3.08
+Epoch93, Training loss 7006.8315429688, Time used 3.26
 
-Epoch94, Training loss 7019.0859375000, Time used 3.08
+Epoch94, Training loss 7004.0146484375, Time used 3.22
 
-Epoch95, Training loss 7010.5122070312, Time used 3.08
+Epoch95, Training loss 7002.0327148438, Time used 3.30
 
-Epoch96, Training loss 7021.2778320312, Time used 3.08
+Epoch96, Training loss 7030.2490234375, Time used 3.35
 
-Epoch97, Training loss 7016.3603515625, Time used 3.08
+Epoch97, Training loss 7001.7377929688, Time used 3.33
 
-Epoch98, Training loss 6998.7792968750, Time used 3.09
+Epoch98, Training loss 6993.6352539062, Time used 3.32
 
-Epoch99, Training loss 7002.2187500000, Time used 3.08
+Epoch99, Training loss 7000.5571289062, Time used 3.33
 
-![0](./0.png)![1](./1.png)![2](./2.png)![3](./3.png)![4](./4.png)![5](./5.png)![6](./6.png)![7](./7.png)![8](./8.png)![9](./9.png)
+![0](./0.png)![0](./test_0.png)![1](./1.png)![1](./test_1.png)![2](./2.png)![2](./test_2.png)![3](./3.png)![3](./test_3.png)![4](./4.png)![4](./test_4.png)![5](./5.png)![5](./test_5.png)![6](./6.png)![6](./test_6.png)![7](./7.png)![7](./test_7.png)![8](./8.png)![8](./test_8.png)![9](./9.png)![9](./test_9.png)
