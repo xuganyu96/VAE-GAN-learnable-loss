@@ -99,10 +99,10 @@ class DenseVAE(gluon.Block):
         self.logloss = - nd.sum(x*nd.log(x_hat + 1e-10)+ (1-x)*nd.log(1-x_hat + 1e-10), axis=1)
         
         # Try l2 loss, too
-        self.l2loss = nd.sum((x_hat - x) ** 2, axis = 1)
+        # self.l2loss = nd.sum((x_hat - x) ** 2, axis = 1)
         
         # Sum up the loss
-        loss = self.KL_div_loss + self.l2loss
+        loss = self.KL_div_loss + self.logloss
         return loss
     
     def generate(self, x):

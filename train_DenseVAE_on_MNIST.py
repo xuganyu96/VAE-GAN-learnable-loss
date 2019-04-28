@@ -52,7 +52,7 @@ readme = open(result_dir + 'README.md', 'w')
 readme.write('Number of latent variables \t' + str(n_latent) + '\n\n')
 readme.write('Number of hidden layers \t' + str(n_hlayers) + '\n\n')
 readme.write('Number of hidden nodes per layer \t' + str(n_hnodes) + '\n\n')
-readme.write('Pixel-by-pixel loss used is L2 loss')
+readme.write('Pixel-by-pixel loss used is BCE loss')
 
 # Define the number of epochs
 n_epoch = 50
