@@ -153,21 +153,11 @@ for epoch in range(n_epochs):
     epoch_logreg_train_loss = np.mean(logreg_batch_losses)
     epoch_dense_vae_train_loss = np.mean(dense_vae_batch_losses)
     
-    # Use the updated LogReg to make predictions on training data again
-    # to see how accurately LogReg can identify genuine images from
-    # generated images
-    # First check how well it identifies genuine images
-    genuine_acc = nd.mean(nd.round(nd.sigmoid(logreg(train_features)))).asscalar()
-    generated_features = dense_vae.generate(train_features)
-    generated_acc = 1 - nd.mean(nd.round(nd.sigmoid(logreg(generated_features)))).asscalar()
-    train_acc = 0.5 * (genuine_acc + generated_acc)
-    
     # Generate the epoch report
-    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, LogReg Training loss {:.10f}, LogReg Training Acc {:.3f}, Time used {:.2f}'
+    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, LogReg Training loss {:.10f}, Time used {:.2f}'
     epoch_report = epoch_report.format(epoch,
                                        epoch_dense_vae_train_loss,
                                        epoch_logreg_train_loss,
-                                       train_acc,
                                        time_consumed)
     readme.write(epoch_report + '\n\n')
     print(epoch_report)

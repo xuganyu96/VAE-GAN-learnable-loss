@@ -10,104 +10,104 @@ LogReg number of hidden nodes per layer 	200
 
 Number of epochs trained 	50
 
-Epoch0, VAE Training loss 160.44768, LogReg Training loss 0.5123975277, LogReg Training Acc 0.936, Time used 15.45
+Epoch0, VAE Training loss 47.08946, LogReg Training loss 0.5814958811, Time used 16.26
 
-Epoch1, VAE Training loss 132.92728, LogReg Training loss 0.3199676573, LogReg Training Acc 0.947, Time used 15.47
+Epoch1, VAE Training loss 38.46367, LogReg Training loss 0.5076446533, Time used 15.81
 
-Epoch2, VAE Training loss 128.52544, LogReg Training loss 0.2793494165, LogReg Training Acc 0.957, Time used 15.49
+Epoch2, VAE Training loss 37.41409, LogReg Training loss 0.4974885881, Time used 15.94
 
-Epoch3, VAE Training loss 126.05097, LogReg Training loss 0.2663137913, LogReg Training Acc 0.969, Time used 15.50
+Epoch3, VAE Training loss 36.94384, LogReg Training loss 0.4967022538, Time used 16.06
 
-Epoch4, VAE Training loss 124.50854, LogReg Training loss 0.2656011283, LogReg Training Acc 0.963, Time used 15.39
+Epoch4, VAE Training loss 36.55576, LogReg Training loss 0.5400667191, Time used 16.09
 
-Epoch5, VAE Training loss 123.44779, LogReg Training loss 0.2702503204, LogReg Training Acc 0.962, Time used 15.38
+Epoch5, VAE Training loss 36.38054, LogReg Training loss 0.5602618456, Time used 15.91
 
-Epoch6, VAE Training loss 122.63647, LogReg Training loss 0.2652993798, LogReg Training Acc 0.952, Time used 15.39
+Epoch6, VAE Training loss 36.21546, LogReg Training loss 0.5827295184, Time used 16.06
 
-Epoch7, VAE Training loss 122.06966, LogReg Training loss 0.2701441050, LogReg Training Acc 0.953, Time used 15.42
+Epoch7, VAE Training loss 36.02846, LogReg Training loss 0.6016645432, Time used 15.80
 
-Epoch8, VAE Training loss 121.49578, LogReg Training loss 0.2714539766, LogReg Training Acc 0.956, Time used 15.68
+Epoch8, VAE Training loss 35.94122, LogReg Training loss 0.6145336628, Time used 15.89
 
-Epoch9, VAE Training loss 121.13158, LogReg Training loss 0.2718443274, LogReg Training Acc 0.940, Time used 15.86
+Epoch9, VAE Training loss 35.82189, LogReg Training loss 0.6333668828, Time used 15.84
 
-Epoch10, VAE Training loss 120.82111, LogReg Training loss 0.2747193575, LogReg Training Acc 0.954, Time used 15.55
+Epoch10, VAE Training loss 35.73027, LogReg Training loss 0.6315189004, Time used 15.79
 
-Epoch11, VAE Training loss 120.63617, LogReg Training loss 0.2751176953, LogReg Training Acc 0.928, Time used 15.63
+Epoch11, VAE Training loss 35.79157, LogReg Training loss 0.6463015079, Time used 15.71
 
-Epoch12, VAE Training loss 120.41593, LogReg Training loss 0.2841952443, LogReg Training Acc 0.963, Time used 15.73
+Epoch12, VAE Training loss 35.62877, LogReg Training loss 0.6496635675, Time used 15.83
 
-Epoch13, VAE Training loss 120.24129, LogReg Training loss 0.2834327817, LogReg Training Acc 0.954, Time used 15.77
+Epoch13, VAE Training loss 35.62308, LogReg Training loss 0.6636326909, Time used 15.88
 
-Epoch14, VAE Training loss 120.06708, LogReg Training loss 0.2923772335, LogReg Training Acc 0.941, Time used 15.66
+Epoch14, VAE Training loss 35.58110, LogReg Training loss 0.6639642715, Time used 15.80
 
-Epoch15, VAE Training loss 119.90665, LogReg Training loss 0.2846859097, LogReg Training Acc 0.940, Time used 16.23
+Epoch15, VAE Training loss 35.53365, LogReg Training loss 0.6753262877, Time used 16.17
 
-Epoch16, VAE Training loss 119.79498, LogReg Training loss 0.2932223380, LogReg Training Acc 0.934, Time used 16.07
+Epoch16, VAE Training loss 35.53899, LogReg Training loss 0.6859294176, Time used 15.58
 
-Epoch17, VAE Training loss 119.75301, LogReg Training loss 0.2968588173, LogReg Training Acc 0.938, Time used 16.17
+Epoch17, VAE Training loss 35.57245, LogReg Training loss 0.6817742586, Time used 15.45
 
-Epoch18, VAE Training loss 119.59572, LogReg Training loss 0.2953657210, LogReg Training Acc 0.948, Time used 16.22
+Epoch18, VAE Training loss 35.45246, LogReg Training loss 0.6887710094, Time used 15.58
 
-Epoch19, VAE Training loss 119.58149, LogReg Training loss 0.2940256000, LogReg Training Acc 0.949, Time used 15.62
+Epoch19, VAE Training loss 35.48316, LogReg Training loss 0.6844522357, Time used 15.70
 
-Epoch20, VAE Training loss 119.42850, LogReg Training loss 0.2985639572, LogReg Training Acc 0.944, Time used 15.46
+Epoch20, VAE Training loss 35.46307, LogReg Training loss 0.6960314512, Time used 15.95
 
-Epoch21, VAE Training loss 119.38739, LogReg Training loss 0.3068319857, LogReg Training Acc 0.937, Time used 15.58
+Epoch21, VAE Training loss 35.40292, LogReg Training loss 0.6974833608, Time used 15.69
 
-Epoch22, VAE Training loss 119.34062, LogReg Training loss 0.3021485209, LogReg Training Acc 0.939, Time used 15.47
+Epoch22, VAE Training loss 35.40183, LogReg Training loss 0.6956839561, Time used 15.81
 
-Epoch23, VAE Training loss 119.34680, LogReg Training loss 0.2996775806, LogReg Training Acc 0.938, Time used 15.45
+Epoch23, VAE Training loss 35.41626, LogReg Training loss 0.7063101530, Time used 15.82
 
-Epoch24, VAE Training loss 119.21309, LogReg Training loss 0.3151869774, LogReg Training Acc 0.935, Time used 15.42
+Epoch24, VAE Training loss 35.37712, LogReg Training loss 0.7080520988, Time used 15.77
 
-Epoch25, VAE Training loss 119.19304, LogReg Training loss 0.3163976967, LogReg Training Acc 0.941, Time used 15.51
+Epoch25, VAE Training loss 35.33222, LogReg Training loss 0.7074648142, Time used 15.84
 
-Epoch26, VAE Training loss 119.12647, LogReg Training loss 0.3161116838, LogReg Training Acc 0.947, Time used 15.60
+Epoch26, VAE Training loss 35.34101, LogReg Training loss 0.7113653421, Time used 15.58
 
-Epoch27, VAE Training loss 119.09417, LogReg Training loss 0.3104919791, LogReg Training Acc 0.913, Time used 15.76
+Epoch27, VAE Training loss 35.31963, LogReg Training loss 0.7150010467, Time used 15.82
 
-Epoch28, VAE Training loss 119.06213, LogReg Training loss 0.3181481063, LogReg Training Acc 0.947, Time used 16.11
+Epoch28, VAE Training loss 35.37315, LogReg Training loss 0.7122924924, Time used 15.98
 
-Epoch29, VAE Training loss 118.93893, LogReg Training loss 0.3220795393, LogReg Training Acc 0.926, Time used 15.51
+Epoch29, VAE Training loss 35.32807, LogReg Training loss 0.7204290032, Time used 15.75
 
-Epoch30, VAE Training loss 118.92504, LogReg Training loss 0.3222967684, LogReg Training Acc 0.940, Time used 15.41
+Epoch30, VAE Training loss 35.23219, LogReg Training loss 0.7085844874, Time used 15.71
 
-Epoch31, VAE Training loss 118.83470, LogReg Training loss 0.3235830069, LogReg Training Acc 0.929, Time used 15.37
+Epoch31, VAE Training loss 35.27415, LogReg Training loss 0.7210561037, Time used 15.52
 
-Epoch32, VAE Training loss 118.86026, LogReg Training loss 0.3163617551, LogReg Training Acc 0.942, Time used 15.73
+Epoch32, VAE Training loss 35.22655, LogReg Training loss 0.7174843550, Time used 15.65
 
-Epoch33, VAE Training loss 118.75835, LogReg Training loss 0.3332349956, LogReg Training Acc 0.935, Time used 15.58
+Epoch33, VAE Training loss 35.22029, LogReg Training loss 0.7168298364, Time used 15.65
 
-Epoch34, VAE Training loss 118.77227, LogReg Training loss 0.3291104138, LogReg Training Acc 0.948, Time used 15.53
+Epoch34, VAE Training loss 35.18991, LogReg Training loss 0.7244518995, Time used 15.90
 
-Epoch35, VAE Training loss 118.77338, LogReg Training loss 0.3269389868, LogReg Training Acc 0.938, Time used 15.49
+Epoch35, VAE Training loss 35.13635, LogReg Training loss 0.7286379337, Time used 15.74
 
-Epoch36, VAE Training loss 118.71312, LogReg Training loss 0.3316164017, LogReg Training Acc 0.939, Time used 15.47
+Epoch36, VAE Training loss 35.18909, LogReg Training loss 0.7248604298, Time used 15.78
 
-Epoch37, VAE Training loss 118.74052, LogReg Training loss 0.3443414569, LogReg Training Acc 0.926, Time used 16.00
+Epoch37, VAE Training loss 35.15077, LogReg Training loss 0.7280824184, Time used 15.67
 
-Epoch38, VAE Training loss 118.55852, LogReg Training loss 0.3433398008, LogReg Training Acc 0.933, Time used 16.06
+Epoch38, VAE Training loss 35.15170, LogReg Training loss 0.7302359343, Time used 15.75
 
-Epoch39, VAE Training loss 118.54105, LogReg Training loss 0.3475954831, LogReg Training Acc 0.936, Time used 16.04
+Epoch39, VAE Training loss 35.11661, LogReg Training loss 0.7282341719, Time used 15.76
 
-Epoch40, VAE Training loss 118.44825, LogReg Training loss 0.3470422029, LogReg Training Acc 0.940, Time used 16.06
+Epoch40, VAE Training loss 35.08074, LogReg Training loss 0.7342801094, Time used 15.97
 
-Epoch41, VAE Training loss 118.54471, LogReg Training loss 0.3476268351, LogReg Training Acc 0.930, Time used 16.05
+Epoch41, VAE Training loss 35.07724, LogReg Training loss 0.7315517664, Time used 15.75
 
-Epoch42, VAE Training loss 118.46882, LogReg Training loss 0.3470509648, LogReg Training Acc 0.924, Time used 16.00
+Epoch42, VAE Training loss 35.01958, LogReg Training loss 0.7254018188, Time used 15.61
 
-Epoch43, VAE Training loss 118.48465, LogReg Training loss 0.3610104620, LogReg Training Acc 0.908, Time used 15.99
+Epoch43, VAE Training loss 35.05788, LogReg Training loss 0.7281755805, Time used 15.58
 
-Epoch44, VAE Training loss 118.38573, LogReg Training loss 0.3463791907, LogReg Training Acc 0.938, Time used 16.14
+Epoch44, VAE Training loss 35.01736, LogReg Training loss 0.7284948826, Time used 15.43
 
-Epoch45, VAE Training loss 118.34499, LogReg Training loss 0.3497046232, LogReg Training Acc 0.932, Time used 16.08
+Epoch45, VAE Training loss 34.98921, LogReg Training loss 0.7347298861, Time used 15.93
 
-Epoch46, VAE Training loss 118.34994, LogReg Training loss 0.3570315540, LogReg Training Acc 0.939, Time used 15.99
+Epoch46, VAE Training loss 34.98973, LogReg Training loss 0.7394830585, Time used 15.73
 
-Epoch47, VAE Training loss 118.29050, LogReg Training loss 0.3616282344, LogReg Training Acc 0.935, Time used 16.01
+Epoch47, VAE Training loss 34.95861, LogReg Training loss 0.7295132875, Time used 15.80
 
-Epoch48, VAE Training loss 118.29213, LogReg Training loss 0.3597907722, LogReg Training Acc 0.933, Time used 15.99
+Epoch48, VAE Training loss 34.93506, LogReg Training loss 0.7322177887, Time used 15.73
 
-Epoch49, VAE Training loss 118.21084, LogReg Training loss 0.3472578824, LogReg Training Acc 0.932, Time used 15.40
+Epoch49, VAE Training loss 34.95153, LogReg Training loss 0.7373955250, Time used 16.21
 
 ![0](./0.png)![1](./1.png)![2](./2.png)![3](./3.png)![4](./4.png)![5](./5.png)![6](./6.png)![7](./7.png)![8](./8.png)![9](./9.png)
