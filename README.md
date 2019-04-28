@@ -4,58 +4,22 @@ Repository for Berkeley STAT 157 semester project on attaching discriminatory ne
 ## Experiments on MNIST
 Below are the first ten digits taken from the test set of MNIST that are used to produce the validation images:
 
-<img src="./results/images/MNIST_test_images/0.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/1.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/2.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/3.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/4.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/5.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/6.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/7.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/8.png" alt="drawing" width="80"/>
-<img src="./results/images/MNIST_test_images/9.png" alt="drawing" width="80"/>
+<img src="./results/images/MNIST_test_images/0.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/1.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/2.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/3.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/4.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/5.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/6.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/7.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/8.png" alt="drawing" width="80"/><img src="./results/images/MNIST_test_images/9.png" alt="drawing" width="80"/>
 
 ### Dense VAE with Binary Cross Entropy loss as PBP loss
 A VAE with 5 latent variables, 3 hidden dense layers per encoder/decoder, and 400 hidden nodes per hidden layer is trained on the training set of MNIST for 50 epochs. The results are saved in `./results/DenseVAE_on_MNIST/5_3_400_bce_50/`
 
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/0.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/1.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/2.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/3.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/4.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/5.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/6.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/7.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/8.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/9.png" alt="drawing" width="80"/>
+<img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/0.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/1.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/2.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/3.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/4.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/5.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/6.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/7.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/8.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_bce_50/9.png" alt="drawing" width="80"/>
 
 ### Dense VAE with L2 loss as PBP loss
 A VAE with 5 latent variables, 3 hidden dense layers per encoder/decoder, and 400 hidden nodes per hidden layer is trained on the training set of MNIST for 50 epochs. The results are saved in `./results/DenseVAE_on_MNIST/5_3_400_l2_50/`
 
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/0.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/1.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/2.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/3.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/4.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/5.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/6.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/7.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/8.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/9.png" alt="drawing" width="80"/>
+<img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/0.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/1.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/2.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/3.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/4.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/5.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/6.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/7.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/8.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_on_MNIST/5_3_400_l2_50/9.png" alt="drawing" width="80"/>
 
 ### Dense VAE with BCE + dense logistic regressor
 A VAE with 5 latent variables, 3 hidden dense layers per encoder/decoder, 400 hidden nodes per hidden layer, and a binary cross entropy as pbp loss is trained against a dense logistic regressor with 1 hidden dense layer and 200 nodes per hidden layer on the training set of MNIST for 50 epochs. The results are saved in `./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50`
 
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/0.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/1.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/2.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/3.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/4.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/5.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/6.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/7.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/8.png" alt="drawing" width="80"/>
-<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/9.png" alt="drawing" width="80"/>
+<img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/0.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/1.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/2.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/3.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/4.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/5.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/6.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/7.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/8.png" alt="drawing" width="80"/><img src="./results/images/DenseVAE_DenseLogReg_on_MNIST/5_3_400_1_200_50/9.png" alt="drawing" width="80"/>
 
 
 
