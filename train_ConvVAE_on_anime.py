@@ -48,7 +48,7 @@ trainer = gluon.Trainer(conv_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_on_anime/512_32_200/'
+result_dir = './results/images/ConvVAE_on_anime/2048_32_200/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
