@@ -38,8 +38,8 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the VAE model, then build the trainer and 
 # initialize the parameters
-n_latent = 10
-n_hlayers = 10
+n_latent = 5
+n_hlayers = 5
 n_hnodes = 400
 dense_vae = DenseVAE(n_latent = n_latent,
                     n_hlayers = n_hlayers,
@@ -54,7 +54,7 @@ dense_vae_trainer = gluon.Trainer(dense_vae.collect_params(),
 
 # Instantiate the logistic regression model, initialize its paramters
 # and instantiate the trainer instance
-logreg_n_hlayers = 2
+logreg_n_hlayers = 1
 logreg_n_hnodes = 200
 logreg = DenseLogReg(n_hlayers = logreg_n_hlayers,
                     n_hnodes = logreg_n_hnodes)
@@ -70,7 +70,7 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/10_10_400_1_200_50_10/'
+result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/5_5_400_1_200_50_10/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
