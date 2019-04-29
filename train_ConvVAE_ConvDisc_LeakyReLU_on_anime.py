@@ -39,8 +39,8 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the VAE model, then build the trainer and 
 # initialize the parameters
-n_latent = 256
-n_base_channels = 16
+n_latent = 512
+n_base_channels = 32
 conv_vae = ConvVAE(n_latent = n_latent,
                    n_channels = n_channels,
                    out_width = width,
@@ -90,9 +90,9 @@ for epoch in range(n_epochs):
     # Start recording epoch training time
     start_time = time.time()
     
-    # Initialize an NDArray that records the sum of batch losses
-    conv_vae_batch_losses = 0
-    conv_disc_batch_losses = 0
+    # Initialize a list that records the average loss within each batch
+    conv_vae_batch_losses = []
+    conv_disc_batch_losses = []
     
     # Iterate through all possible batches
     for batch_features in train_iter:
@@ -122,6 +122,7 @@ for epoch in range(n_epochs):
             # Total loss is loss with genuine and with generated images
             disc_loss = genuine_loss + generated_loss
             disc_loss.backward()
+            conv_disc_batch_losses.append(nd.mean(disc_loss).asscalar())
             
         # update the parameters in the convolutional discriminator
         conv_disc_trainer.step(batch_size)
@@ -133,6 +134,7 @@ for epoch in range(n_epochs):
             # Sum up the VAE loss and the discriminator loss (with multiplier)
             gen_loss = conv_vae(batch_features) + disc_loss_func(conv_disc(conv_vae.generate(batch_features)), genuine_labels) * disc_loss_multiplier
             gen_loss.backward()
+            conv_vae_batch_losses.append(nd.mean(gen_loss).asscalar())
             
         # Update the parameters in the dense vae
         conv_vae_trainer.step(batch_size)
@@ -144,15 +146,14 @@ for epoch in range(n_epochs):
     # Compute some summarical metrics of this epoch
     stop_time = time.time()
     time_consumed = stop_time - start_time
-    epoch_conv_disc_train_loss = conv_disc_batch_losses / train_features.shape[0]
-    epoch_conv_vae_train_loss = conv_vae_batch_losses / train_features.shape[0]
+    epoch_conv_disc_train_loss = np.mean(conv_disc_batch_losses)
+    epoch_conv_vae_train_loss = np.mean(conv_vae_batch_losses)
     
     # Generate the epoch report
     epoch_report = 'Epoch{}, VAE Training loss {:.5f}, ConvDisc Training loss {:.10f}, Time used {:.2f}'
-    epoch_report = 'Epoch{}, Time used {:.2f}'
     epoch_report = epoch_report.format(epoch,
-                                       #epoch_conv_vae_train_loss,
-                                       #epoch_conv_disc_train_loss,
+                                       epoch_conv_vae_train_loss,
+                                       epoch_conv_disc_train_loss,
                                        time_consumed)
     readme.write(epoch_report + '\n\n')
     print(epoch_report)
