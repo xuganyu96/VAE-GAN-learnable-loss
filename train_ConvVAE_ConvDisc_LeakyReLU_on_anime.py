@@ -17,7 +17,7 @@ from ConvDisc_LeakyReLU import ConvDisc_LeakyReLU as ConvDisc
 
 # Prepare the training data and training data iterator
 print("[STATE]: Loading data onto context")
-all_features = nd.shuffle(nd.load('../project_data/anime_faces.ndy')[0])
+all_features = nd.shuffle(nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX))
 
 
 # Use 80% of the data as training data
@@ -52,7 +52,7 @@ conv_vae_trainer = gluon.Trainer(conv_vae.collect_params(),
                         'adam', 
                         {'learning_rate': .001})
 
-# Instantiate the logistic regression model, initialize its paramters
+# Instantiate the convolutional discriminator model, initialize its paramters
 # and instantiate the trainer instance
 conv_disc = ConvDisc(n_classes = 1,
                     n_base_channels = n_base_channels)
@@ -69,7 +69,7 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_ConvDisc_LeakyReLU_on_anime/256_16_16_200_10/'
+result_dir = './results/images/ConvVAE_ConvDisc_LeakyReLU_on_anime/512_32_32_200_10/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')

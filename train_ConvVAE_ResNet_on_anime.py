@@ -38,8 +38,8 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the VAE model, then build the trainer and 
 # initialize the parameters
-n_latent = 256
-n_base_channels = 16
+n_latent = 512
+n_base_channels = 32
 conv_vae = ConvVAE(n_latent = n_latent,
                    n_channels = n_channels,
                    out_width = width,
@@ -67,7 +67,7 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_ResNet_on_anime/256_16_200_10/'
+result_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
@@ -90,7 +90,7 @@ for epoch in range(n_epochs):
     
     # Initialize a list that records the average loss within each batch
     conv_vae_batch_losses = []
-    conv_disc_batch_losses = []
+    restnet_batch_losses = []
     
     # Iterate through all possible batches
     for batch_features in train_iter:
@@ -109,21 +109,21 @@ for epoch in range(n_epochs):
         with autograd.record():
             
             # Train with genuine images: make predictions on genuine images
-            genuine_logit_preds = conv_disc(batch_features)
+            genuine_logit_preds = resnet(batch_features)
             genuine_loss = disc_loss_func(genuine_logit_preds, genuine_labels)
             
             # Train with generated images: make predictions on generated images
             generated_features = conv_vae.generate(batch_features)
-            generated_logit_preds = conv_disc(generated_features)
+            generated_logit_preds = resnet(generated_features)
             generated_loss = disc_loss_func(generated_logit_preds, generated_labels)
             
             # Total loss is loss with genuine and with generated images
             disc_loss = genuine_loss + generated_loss
             disc_loss.backward()
-            conv_disc_batch_losses.append(nd.mean(disc_loss).asscalar())
+            restnet_batch_losses.append(nd.mean(disc_loss).asscalar())
             
         # update the parameters in the convolutional discriminator
-        conv_disc_trainer.step(batch_size)
+        resnet_trainer.step(batch_size)
         
         ############################################################################
         # UPDATE THE VAE NETWORK
@@ -139,7 +139,7 @@ for epoch in range(n_epochs):
             # Compute the content loss by letting the logreg network make predictions
             # on the generated images
             generated_features = conv_vae.generate(batch_features)
-            generated_logit_preds = conv_disc(generated_features)
+            generated_logit_preds = resnet(generated_features)
             batch_disc_loss = disc_loss_func(generated_logit_preds, genuine_labels)
             
             # Sum up the VAE loss and the discriminator loss (with multiplier)
@@ -157,14 +157,14 @@ for epoch in range(n_epochs):
     # Compute some summarical metrics of this epoch
     stop_time = time.time()
     time_consumed = stop_time - start_time
-    epoch_conv_disc_train_loss = np.mean(conv_disc_batch_losses)
+    epoch_resnet_train_loss = np.mean(restnet_batch_losses)
     epoch_conv_vae_train_loss = np.mean(conv_vae_batch_losses)
     
     # Generate the epoch report
-    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, ConvDisc Training loss {:.10f}, Time used {:.2f}'
+    epoch_report = 'Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.10f}, Time used {:.2f}'
     epoch_report = epoch_report.format(epoch,
                                        epoch_conv_vae_train_loss,
-                                       epoch_conv_disc_train_loss,
+                                       epoch_resnet_train_loss,
                                        time_consumed)
     readme.write(epoch_report + '\n\n')
     print(epoch_report)

@@ -33,8 +33,8 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the model, then build the trainer and 
 # initialize the parameters
-n_latent = 256
-n_base_channels = 16
+n_latent = 512
+n_base_channels = 32
 conv_vae = ConvVAE(n_latent = n_latent,
                    n_channels = n_channels,
                    out_width = width,
@@ -48,7 +48,7 @@ trainer = gluon.Trainer(conv_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_on_anime/256_16_200/'
+result_dir = './results/images/ConvVAE_on_anime/512_32_200/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
