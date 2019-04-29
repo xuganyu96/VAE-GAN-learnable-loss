@@ -7,18 +7,17 @@ import d2l
 CTX = d2l.try_gpu()
 import time
 import matplotlib.pyplot as plt
-import os
 
 # Import the DenseVAE and the DenseLogisticRegressor models
 import sys
 sys.path.insert(0, "./models")
 from ConvVAE import ConvVAE
-from ConvDisc_LeakyReLU import ConvDisc_LeakyReLU as ConvDisc
+from ResNet import ResNet
 
 # Prepare the training data and training data iterator
 print("[STATE]: Loading data onto context")
-all_features = nd.shuffle(nd.load('../project_data/anime_faces.ndy')[0])
-
+all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
+all_features = nd.shuffle(all_features)
 
 # Use 80% of the data as training data
 # since the anime faces have no particular order, just take the first
@@ -54,11 +53,10 @@ conv_vae_trainer = gluon.Trainer(conv_vae.collect_params(),
 
 # Instantiate the logistic regression model, initialize its paramters
 # and instantiate the trainer instance
-conv_disc = ConvDisc(n_classes = 1,
-                    n_base_channels = n_base_channels)
-conv_disc.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
+resnet = ResNet(n_classes = 1)
+resnet.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
 # conv_disc = conv_disc.cast('float16')
-conv_disc_trainer = gluon.Trainer(conv_disc.collect_params(),
+resnet_trainer = gluon.Trainer(resnet.collect_params(),
                                'adam',
                                {'learning_rate': 0.001})
 
@@ -69,12 +67,13 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_ConvDisc_LeakyReLU_on_anime/256_16_16_200_10/'
+result_dir = './results/images/ConvVAE_ResNet_on_anime/256_16_200_10/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
 readme.write('VAE number of latent variables \t' + str(n_latent) + '\n\n')
-readme.write('VAE and Discriminator number of base channels \t' + str(n_base_channels) + '\n\n')
+readme.write('VAE number of base channels \t' + str(n_base_channels) + '\n\n')
+readme.write('Discriminator is ResNet')
 
 # Define the loss function for training the discriminator (the logreg)
 disc_loss_func = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=False)
@@ -83,20 +82,18 @@ disc_loss_func = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=False)
 n_epochs = 200
 readme.write('Number of epochs trained \t' + str(n_epochs) + '\n\n')
 
-
 print("[STATE]: Training started")
 for epoch in range(n_epochs):
     
     # Start recording epoch training time
     start_time = time.time()
     
-    # Initialize an NDArray that records the sum of batch losses
-    conv_vae_batch_losses = 0
-    conv_disc_batch_losses = 0
+    # Initialize a list that records the average loss within each batch
+    conv_vae_batch_losses = []
+    conv_disc_batch_losses = []
     
     # Iterate through all possible batches
     for batch_features in train_iter:
-        
         batch_features = batch_features.as_in_context(CTX)
         batch_size = batch_features.shape[0]
         
@@ -112,16 +109,18 @@ for epoch in range(n_epochs):
         with autograd.record():
             
             # Train with genuine images: make predictions on genuine images
-            genuine_loss = disc_loss_func(conv_disc(batch_features), 
-                                          genuine_labels)
+            genuine_logit_preds = conv_disc(batch_features)
+            genuine_loss = disc_loss_func(genuine_logit_preds, genuine_labels)
             
             # Train with generated images: make predictions on generated images
-            generated_loss = disc_loss_func(conv_disc(conv_vae.generate(batch_features)), 
-                                            generated_labels)
+            generated_features = conv_vae.generate(batch_features)
+            generated_logit_preds = conv_disc(generated_features)
+            generated_loss = disc_loss_func(generated_logit_preds, generated_labels)
             
             # Total loss is loss with genuine and with generated images
             disc_loss = genuine_loss + generated_loss
             disc_loss.backward()
+            conv_disc_batch_losses.append(nd.mean(disc_loss).asscalar())
             
         # update the parameters in the convolutional discriminator
         conv_disc_trainer.step(batch_size)
@@ -130,9 +129,23 @@ for epoch in range(n_epochs):
         # UPDATE THE VAE NETWORK
         ############################################################################
         with autograd.record():
+            
+#             # Make a pass on "forward", which will get the kl_div loss 
+#             # and the logloss to be assigned into instance attributes
+#             dense_vae.forward(batch_features)
+#             batch_kl_div_loss = dense_vae.KL_div_loss
+#             batch_pbp_loss = dense_vae.logloss
+            
+            # Compute the content loss by letting the logreg network make predictions
+            # on the generated images
+            generated_features = conv_vae.generate(batch_features)
+            generated_logit_preds = conv_disc(generated_features)
+            batch_disc_loss = disc_loss_func(generated_logit_preds, genuine_labels)
+            
             # Sum up the VAE loss and the discriminator loss (with multiplier)
-            gen_loss = conv_vae(batch_features) + disc_loss_func(conv_disc(conv_vae.generate(batch_features)), genuine_labels) * disc_loss_multiplier
+            gen_loss = conv_vae(batch_features) + batch_disc_loss * disc_loss_multiplier
             gen_loss.backward()
+            conv_vae_batch_losses.append(nd.mean(gen_loss).asscalar())
             
         # Update the parameters in the dense vae
         conv_vae_trainer.step(batch_size)
@@ -144,19 +157,17 @@ for epoch in range(n_epochs):
     # Compute some summarical metrics of this epoch
     stop_time = time.time()
     time_consumed = stop_time - start_time
-    epoch_conv_disc_train_loss = conv_disc_batch_losses / train_features.shape[0]
-    epoch_conv_vae_train_loss = conv_vae_batch_losses / train_features.shape[0]
+    epoch_conv_disc_train_loss = np.mean(conv_disc_batch_losses)
+    epoch_conv_vae_train_loss = np.mean(conv_vae_batch_losses)
     
     # Generate the epoch report
     epoch_report = 'Epoch{}, VAE Training loss {:.5f}, ConvDisc Training loss {:.10f}, Time used {:.2f}'
-    epoch_report = 'Epoch{}, Time used {:.2f}'
     epoch_report = epoch_report.format(epoch,
-                                       #epoch_conv_vae_train_loss,
-                                       #epoch_conv_disc_train_loss,
+                                       epoch_conv_vae_train_loss,
+                                       epoch_conv_disc_train_loss,
                                        time_consumed)
     readme.write(epoch_report + '\n\n')
     print(epoch_report)
-#     os.system('nvidia-smi')
     
 # Validation
 img_arrays = conv_vae.generate(test_features).asnumpy()

@@ -15,7 +15,7 @@ class ConvVAE(gluon.Block):
                 n_channels = 3,
                 out_width = 64,
                 out_height = 64,
-                n_base_channels = 32):
+                n_base_channels = 16):
         super(ConvVAE, self).__init__()
         
         # Record the model hyperparameters
@@ -31,13 +31,13 @@ class ConvVAE(gluon.Block):
             # Construct the encoder network
             self.encoder = nn.Sequential(prefix='encoder')
             # Add convolution layers with increasing number of channels
+            self.encoder.add(nn.Conv2D(n_base_channels * 1, kernel_size=4, use_bias=False),
+                             nn.BatchNorm(),
+                             nn.Activation('relu'))
             self.encoder.add(nn.Conv2D(n_base_channels * 2, kernel_size=4, use_bias=False),
                              nn.BatchNorm(),
                              nn.Activation('relu'))
             self.encoder.add(nn.Conv2D(n_base_channels * 4, kernel_size=4, use_bias=False),
-                             nn.BatchNorm(),
-                             nn.Activation('relu'))
-            self.encoder.add(nn.Conv2D(n_base_channels * 8, kernel_size=4, use_bias=False),
                              nn.BatchNorm(),
                              nn.Activation('relu'))
             # Add a final output layer that is 2 times the number of 
@@ -87,7 +87,7 @@ class ConvVAE(gluon.Block):
         latent_z = latent_mean + nd.exp(0.5 * latent_logvar) * eps
         
         # Compute the KL Divergence between latent variable and standard normal
-        self.kl_div_loss = -0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
+        kl_div_loss = -0.5 * nd.sum(1 + latent_logvar - latent_mean * latent_mean - nd.exp(latent_logvar),
                                          axis=1)
         
         # Use the decoder to generate output
@@ -96,12 +96,12 @@ class ConvVAE(gluon.Block):
         # Compute the pixel-by-pixel loss; this requires that x and x_hat be flattened
         x_flattened = x.reshape((x.shape[0], -1))
         x_hat_flattened = x_hat.reshape((x_hat.shape[0], -1))
-        self.logloss = - nd.sum(x_flattened*nd.log(x_hat_flattened + 1e-10) +
+        logloss = - nd.sum(x_flattened*nd.log(x_hat_flattened + 1e-10) +
                                 (1-x_flattened)*nd.log(1-x_hat_flattened+1e-10),
                                 axis=1)
         
         # Sum up the loss
-        loss = self.kl_div_loss + self.logloss
+        loss = kl_div_loss + logloss
         
         return loss
     

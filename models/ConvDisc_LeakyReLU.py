@@ -23,9 +23,6 @@ class ConvDisc_LeakyReLU(gluon.Block):
             self.discriminator.add(nn.Conv2D(n_base_channels*4, 4, 2, 1, use_bias=False),
                                    nn.BatchNorm(),
                                    nn.LeakyReLU(0.2))
-            self.discriminator.add(nn.Conv2D(n_base_channels*8, 4, 2, 1, use_bias=False),
-                                   nn.BatchNorm(),
-                                   nn.LeakyReLU(0.2))
             self.discriminator.add(nn.Dense(n_classes))
             
     def forward(self, x):
