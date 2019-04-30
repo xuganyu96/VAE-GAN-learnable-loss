@@ -15,7 +15,8 @@ class ConvVAE(gluon.Block):
                 n_channels = 3,
                 out_width = 64,
                 out_height = 64,
-                n_base_channels = 16):
+                n_base_channels = 16,
+                pbp_weight=1):
         super(ConvVAE, self).__init__()
         
         # Record the model hyperparameters
@@ -24,6 +25,8 @@ class ConvVAE(gluon.Block):
         self.out_width = out_width
         self.out_height = out_height
         self.n_base_channels = n_base_channels
+        self.pbp_weight = pbp_weight
+        
         
         # Construct the encoder and decoder network
         with self.name_scope():
@@ -101,7 +104,7 @@ class ConvVAE(gluon.Block):
                                 axis=1)
         
         # Sum up the loss
-        loss = kl_div_loss + logloss
+        loss = kl_div_loss + logloss * self.pbp_weight
         
         return loss
     

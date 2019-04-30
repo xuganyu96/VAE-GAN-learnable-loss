@@ -16,7 +16,7 @@ from ResNet import ResNet
 
 # Prepare the training data and training data iterator
 print("[STATE]: Loading data onto context")
-all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
+all_features = nd.load('../data/anime_faces.ndy')[0].as_in_context(CTX)
 all_features = nd.shuffle(all_features)
 
 # Use 80% of the data as training data
@@ -31,7 +31,7 @@ train_iter = gdata.DataLoader(train_features,
                                   batch_size,
                                  shuffle=True,
                                  last_batch='keep')
-print("[STATE]: Data loaded onto context")
+print("[STATE]: Data loaded onto context: {}".format(CTX))
 
 # Extract the training image's shape
 _, n_channels, width, height = train_features.shape
@@ -67,19 +67,20 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10/'
+result_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_0.5/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
 readme.write('VAE number of latent variables \t' + str(n_latent) + '\n\n')
 readme.write('VAE number of base channels \t' + str(n_base_channels) + '\n\n')
+readme.write('PBP loss weight is '+ str(conv_vae.pbp_weight) + '\n\n')
 readme.write('Discriminator is ResNet')
 
 # Define the loss function for training the discriminator (the logreg)
 disc_loss_func = gloss.SigmoidBinaryCrossEntropyLoss(from_sigmoid=False)
 
 # Define the number of epochs to train
-n_epochs = 200
+n_epochs = 1
 readme.write('Number of epochs trained \t' + str(n_epochs) + '\n\n')
 
 print("[STATE]: Training started")
@@ -92,8 +93,13 @@ for epoch in range(n_epochs):
     conv_vae_batch_losses = []
     restnet_batch_losses = []
     
+    #batch_count = 0
     # Iterate through all possible batches
     for batch_features in train_iter:
+        
+        #print(batch_count)
+        #batch_count += 1
+        
         batch_features = batch_features.as_in_context(CTX)
         batch_size = batch_features.shape[0]
         
