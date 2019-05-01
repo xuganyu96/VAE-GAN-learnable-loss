@@ -16,7 +16,8 @@ from DenseLogisticRegressor import DenseLogisticRegressor as DenseLogReg
 
 # Prepare the training data and training data iterator
 print("[STATE]: Loading data onto context")
-all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
+mx.random.seed(0)
+all_features = nd.load('../project_data/anime_faces.ndy')[0]
 all_features = nd.shuffle(all_features)
 
 # Use 80% of the data as training data
@@ -70,7 +71,7 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/256_5_1024_1_1024_200_10/'
+result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/256_5_1024_1_1024_200_10_seeded/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
@@ -174,11 +175,13 @@ for epoch in range(n_epochs):
     readme.write(epoch_report + '\n\n')
     print(epoch_report)
     
-# Validation
-img_arrays = dense_vae.generate(test_features).asnumpy()
-
 # Define the number of validation images to generate (and display in the README.md)
 n_validations = 10
+    
+# Validation
+img_arrays = dense_vae.generate(test_features[0:n_validations].as_in_context(CTX)).asnumpy()
+
+
 
 for i in range(n_validations):
     # Add a line that writes to the report to display the images

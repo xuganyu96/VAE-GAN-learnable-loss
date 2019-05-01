@@ -13,7 +13,8 @@ import sys
 sys.path.insert(0, "./models")
 from DenseVAE import DenseVAE
 
-all_features = nd.load('../project_data/anime_faces.ndy')[0].as_in_context(CTX)
+mx.random.seed(0)
+all_features = nd.load('../project_data/anime_faces.ndy')[0]
 all_features = nd.shuffle(all_features)
 
 # Use 80% of the data as training data
@@ -33,7 +34,7 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the model, then build the trainer and 
 # initialize the parameters
-n_latent = 256
+n_latent = 512
 n_hlayers = 5
 n_hnodes = 1024
 dense_vae = DenseVAE(n_latent = n_latent,
@@ -50,7 +51,7 @@ trainer = gluon.Trainer(dense_vae.collect_params(),
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_on_anime/256_5_1024_200/'
+result_dir = './results/images/DenseVAE_on_anime/512_5_1024_200_seeded/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
@@ -85,11 +86,13 @@ for epoch in range(n_epoch):
     readme.write(epoch_report_str + '\n\n')
     print(epoch_report_str)
     
-# Validation
-img_arrays = dense_vae.generate(test_features).asnumpy()
-
 # Define the number of validation images to generate (and display in the README.md)
 n_validations = 10
+    
+# Validation
+img_arrays = dense_vae.generate(test_features[0:n_validations].as_in_context(CTX)).asnumpy()
+
+
 
 for i in range(n_validations):
     # Add a line that writes to the report to display the images
