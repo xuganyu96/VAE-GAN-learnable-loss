@@ -39,7 +39,7 @@ _, n_channels, width, height = train_features.shape
 
 # Instantiate the VAE model, then build the trainer and 
 # initialize the parameters
-n_latent = 256
+n_latent = 512
 n_hlayers = 5
 n_hnodes = 1024
 dense_vae = DenseVAE(n_latent = n_latent,
@@ -71,7 +71,7 @@ disc_loss_multiplier = 10
 # Specify the directory to which validation images and training
 # report (with training errors and time for each epoch) will be
 # saved
-result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/256_5_1024_1_1024_200_10_seeded/'
+result_dir = './results/images/DenseVAE_DenseLogReg_on_anime/512_5_1024_1_1024_200_10_seeded/'
 
 # Open a file to write to for training reports
 readme = open(result_dir + 'README.md', 'w')
