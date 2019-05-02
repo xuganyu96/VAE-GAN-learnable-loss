@@ -59,10 +59,10 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1.params'
-n_epochs=20
-n_solo_epochs=10
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_0.5/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_0.5.params'
+n_epochs=200
+n_solo_epochs=0
 max_disc_loss=999
 variable_pbp_weight=False
 
@@ -71,13 +71,13 @@ variable_pbp_weight=False
 ##########################################################################################
 train_VAE_GAN(vae_net = conv_vae,
               disc_net = resnet,
-              train_features = train_features[0:1000],
+              train_features = train_features,
               test_features = test_features,
               test_results_dir = test_results_dir,
               vae_parameters_path = vae_parameters_path,
               batch_size = batch_size,
               init_lr = 0.001,
-              pbp_weight = 1,
+              pbp_weight = 0.5,
               n_epochs = n_epochs,
               n_solo_epochs = n_solo_epochs,
               max_disc_loss = max_disc_loss,
