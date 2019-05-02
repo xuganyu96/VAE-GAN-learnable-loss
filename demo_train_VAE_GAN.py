@@ -1,0 +1,120 @@
+# Import the basic packages
+import mxnet as mx
+from mxnet import nd, init, gluon, autograd, image
+from mxnet.gluon import data as gdata, loss as gloss, nn
+import numpy as np
+import d2l
+CTX = d2l.try_gpu()
+import time
+import matplotlib.pyplot as plt
+import os
+os.system('export MXNET_CUDNN_AUTOTUNE_DEFAULT=0')
+
+# Import the ConvVAE and ResNet
+import sys
+sys.path.insert(0, "./models")
+from ConvVAE import ConvVAE
+from ResNet import ResNet
+
+# Import the VAE_GAN training method
+from train_VAE_GAN import train_VAE_GAN
+
+##########################################################################################
+## DATA PREPARATION
+##########################################################################################
+# Because training data iterator is defined in the train_VAE_GAN method
+# we don't need to define it here
+print("[STATE]: Loading data onto context")
+print('[STATE]: Random seed chosen is 0')
+mx.random.seed(0)
+all_features = nd.load('../project_data/anime_faces.ndy')[0]
+all_features = nd.shuffle(all_features)
+
+# Use 80% of the data as training data
+# since the anime faces have no particular order, just take the first
+# 80% as training set
+n_train = int(all_features.shape[0] * 0.8)
+train_features = all_features[0:n_train]
+test_features = all_features[n_train:]
+batch_size = 64
+_, n_channels, width, height = train_features.shape
+
+##########################################################################################
+## MODEL PREPARATION
+##########################################################################################
+# Instantiate the gluon.Block instances
+# Do not initialize them or get trainers; initialization and trainer
+# are done in the VAE_GAN_train method
+n_latent = 512
+n_base_channels = 32
+pbp_weight = 1
+conv_vae = ConvVAE(n_latent=n_latent,
+                   n_channels=n_channels,
+                   out_width=width,
+                   out_height=height,
+                   n_base_channels=n_base_channels,
+                  pbp_weight=pbp_weight)
+resnet = ResNet(n_classes=1)
+
+##########################################################################################
+## ADDITIONAL TRAINING HYPERPARAMETERS
+##########################################################################################
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1.params'
+n_epochs=20
+n_solo_epochs=10
+max_disc_loss=999
+variable_pbp_weight=False
+
+##########################################################################################
+## Training
+##########################################################################################
+train_VAE_GAN(vae_net = conv_vae,
+              disc_net = resnet,
+              train_features = train_features[0:1000],
+              test_features = test_features,
+              test_results_dir = test_results_dir,
+              vae_parameters_path = vae_parameters_path,
+              batch_size = batch_size,
+              init_lr = 0.001,
+              pbp_weight = 1,
+              n_epochs = n_epochs,
+              n_solo_epochs = n_solo_epochs,
+              max_disc_loss = max_disc_loss,
+              variable_pbp_weight = variable_pbp_weight,
+              CTX = d2l.try_gpu())
+
+
+                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

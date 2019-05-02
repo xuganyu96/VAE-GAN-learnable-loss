@@ -32,7 +32,6 @@ def train_VAE_GAN(vae_net,
                   n_solo_epochs = 0,
                   max_disc_loss = 999,
                   variable_pbp_weight = False,
-                  n_validation = 10,
                   CTX = d2l.try_gpu()):
     
     # VAE_net is a VAE network (most likely a ConvVAE with 512 latent variables
@@ -65,6 +64,9 @@ def train_VAE_GAN(vae_net,
     #############################################################################
     # 
     # Initialize the VAE network and get its trainer
+    print('[STATE]: Initializing model parameters and constructing Gluon trainers')
+    # Set the pbp weight to the desired value
+    vae_net.pbp_weight = pbp_weight
     vae_net.collect_params().initialize(mx.init.Xavier(), 
                                         force_reinit=True,
                                         ctx=CTX)
@@ -87,6 +89,7 @@ def train_VAE_GAN(vae_net,
     # will be written to the results directory
     try:
         csv_writer = open(test_results_dir + 'training_statistics.csv', 'w')
+        print('[STATE]: Writing training statistics to ' + test_results_dir + 'training_statistics.csv')
     except:
         print('[ERROR]: test results directory not valid, writing training statistics to main directory')
         csv_writer = open('./training_statistics.csv', 'w')
@@ -97,9 +100,20 @@ def train_VAE_GAN(vae_net,
     # file will be written to the results directory
     try:
         readme_writer = open(test_results_dir + 'README.md', 'w')
+        print('[STATE]: Writing README report to ' + test_results_dir + 'README.md')
     except:
         print('[ERROR]: test results directory not valid, writing readme to main directory')
         csv_writer = open('./README.md', 'w')
+    # Write a few lines on README to indicate the hyper parameters
+    readme_writer.write('n_latent:{} \n\n'.format(vae_net.n_latent))
+    readme_writer.write('n_base_channels:{} \n\n'.format(vae_net.n_base_channels))
+    if not variable_pbp_weight:
+        readme_writer.write('PBP weight:{} \n\n'.format(vae_net.pbp_weight))
+    else:
+        readme_writer.write('PBP weight is variable \n\n')
+    readme_writer.write('n_solo_epochs:{} \n\n'.format(n_solo_epochs))
+    readme_writer.write('n_combo_epochs:{} \n\n'.format(n_epochs - n_solo_epochs))
+    readme_writer.write('max_disc_loss :{} \n\n'.format(max_disc_loss))
         
     #############################################################################
     ## Data iterator 
@@ -110,6 +124,8 @@ def train_VAE_GAN(vae_net,
                                   batch_size,
                                   shuffle=True,
                                   last_batch='keep')
+    sample_size = train_features.shape[0]
+    print('[STATE]: {} training samples loaded into iterator'.format(sample_size))
     
     #############################################################################
     ## Training parameters
@@ -117,6 +133,8 @@ def train_VAE_GAN(vae_net,
     #
     # Figure out the number of epochs trained with VAE and Discriminator together
     n_combo_epochs = n_epochs - n_solo_epochs
+    print('[STATE]: {} solo epochs and {} combo epochs are to be trained'.format(n_solo_epochs,
+                                                                                 n_combo_epochs))
     
     #############################################################################
     ## Training
@@ -162,7 +180,7 @@ def train_VAE_GAN(vae_net,
                                                                                      epoch_train_loss,
                                                                                      time_consumed)
         readme_writer.write(epoch_report_str + '\n\n')
-        print(epoch_report)
+        print('[STATE]: ' + epoch_report_str)
         
     # Now that all solo rounds are over, revert the PBP weight of the vae back to the original
     # specified value
@@ -177,6 +195,7 @@ def train_VAE_GAN(vae_net,
     # Before any training, set it to 1
     use_disc_loss = 1
     for epoch in range(n_solo_epochs, n_epochs):
+        start_time = time.time()
         
         # Initialize the lists that records the average loss within each batch
         vae_batch_losses = []
@@ -201,7 +220,7 @@ def train_VAE_GAN(vae_net,
                 
                 # Train with genuine images: make predictions on genuine images
                 genuine_logit_preds = disc_net(batch_features)
-                genuine_loss = disc_loss_function(genuine_logit_preds,
+                genuine_loss = disc_loss_func(genuine_logit_preds,
                                                   genuine_labels)
                 
                 # Train with generated images: make predictions on generated images
@@ -225,14 +244,14 @@ def train_VAE_GAN(vae_net,
                 
                 # Compute the discriminator loss by letting the discriminator network
                 # make predictions on the generated images
-                generated_features = conv_vae.generate(batch_features)
-                generated_logit_preds = resnet(generated_features)
+                generated_features = vae_net.generate(batch_features)
+                generated_logit_preds = disc_net(generated_features)
                 batch_disc_loss = disc_loss_func(generated_logit_preds, genuine_labels)
                 
                 # Sum up the VAE loss and the discriminator loss (with multiplier of 10)
                 # Then multiply batch_disc_loss by an integer
                 # that is 1 if 
-                gen_loss = conv_vae(batch_features) + batch_disc_loss * 10 * use_disc_loss
+                gen_loss = vae_net(batch_features) + batch_disc_loss * 10 * use_disc_loss
                 gen_loss.backward()
                 
                 # Record the VAE batch loss's average
@@ -268,17 +287,17 @@ def train_VAE_GAN(vae_net,
         
         # Generate the README line and the csv line, and write them
         epoch_README_report = 'Epoch{}, VAE Training loss {:.5f}, ResNet Training loss {:.10f}, Time used {:.2f}'
-        epoch_report = epoch_report.format(epoch,
-                                           epoch_vae_train_loss,
-                                           epoch_disc_train_loss,
-                                           time_consumed)
-        epoch_CSV_report = '{},{:.10f},{:.10f},{.2f}'.format(epoch,
+        epoch_README_report = epoch_README_report.format(epoch,
+                                                         epoch_vae_train_loss,
+                                                         epoch_disc_train_loss,
+                                                         time_consumed)
+        epoch_CSV_report = '{},{:.10f},{:.10f},{:.2f}'.format(epoch,
                                                              epoch_vae_train_loss,
                                                              epoch_disc_train_loss,
                                                              time_consumed)
         readme_writer.write(epoch_README_report + '\n\n')
         csv_writer.write(epoch_CSV_report + '\n')
-        print(epoch_README_report)
+        print('[STATE]: ' + epoch_README_report)
         
     ############################################################################
     # END OF TRAINING, now onto the validation process
@@ -305,7 +324,7 @@ def train_VAE_GAN(vae_net,
         # Reshape the output from (n_channels, width, height) to (width, height, n_channels)
         # Note that the vae_net instance already has such information regarding
         # the training images
-        img_array = img_arrays.reshape((vae_net.out_width,
+        img_array = img_arrays[i].reshape((vae_net.out_width,
                                         vae_net.out_height,
                                         vae_net.n_channels))
         
@@ -314,6 +333,8 @@ def train_VAE_GAN(vae_net,
         plt.imshow(img_array)
         try:
             plt.savefig(test_results_dir + str(i) + '.png')
+            print('[STATE]: ' + test_results_dir + str(i) + '.png' + ' saved')
+          
         except:
             print('[ERROR]: test results directory not valid, saving images to main directory')
             plt.savefig('./' + str(i) + '.png')
