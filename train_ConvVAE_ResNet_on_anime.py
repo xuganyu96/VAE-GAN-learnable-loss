@@ -93,7 +93,7 @@ for epoch in range(n_epochs):
     
     # Initialize a list that records the average loss within each batch
     conv_vae_batch_losses = []
-    restnet_batch_losses = []
+    resnet_batch_losses = []
     
     #batch_count = 0
     # Iterate through all possible batches
@@ -128,7 +128,7 @@ for epoch in range(n_epochs):
             # Total loss is loss with genuine and with generated images
             disc_loss = genuine_loss + generated_loss
             disc_loss.backward()
-            restnet_batch_losses.append(nd.mean(disc_loss).asscalar())
+            resnet_batch_losses.append(nd.mean(disc_loss).asscalar())
             
         # update the parameters in the convolutional discriminator
         resnet_trainer.step(batch_size)
@@ -137,12 +137,6 @@ for epoch in range(n_epochs):
         # UPDATE THE VAE NETWORK
         ############################################################################
         with autograd.record():
-            
-#             # Make a pass on "forward", which will get the kl_div loss 
-#             # and the logloss to be assigned into instance attributes
-#             dense_vae.forward(batch_features)
-#             batch_kl_div_loss = dense_vae.KL_div_loss
-#             batch_pbp_loss = dense_vae.logloss
             
             # Compute the content loss by letting the logreg network make predictions
             # on the generated images
@@ -165,7 +159,7 @@ for epoch in range(n_epochs):
     # Compute some summarical metrics of this epoch
     stop_time = time.time()
     time_consumed = stop_time - start_time
-    epoch_resnet_train_loss = np.mean(restnet_batch_losses)
+    epoch_resnet_train_loss = np.mean(resnet_batch_losses)
     epoch_conv_vae_train_loss = np.mean(conv_vae_batch_losses)
     
     # Generate the epoch report
