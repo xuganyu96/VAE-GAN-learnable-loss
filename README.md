@@ -77,6 +77,10 @@ This is the same as trained in the **Convolutional VAE with BCE loss as PBP loss
 
 <img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/0.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/1.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/2.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/3.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/4.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/5.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/6.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/7.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/8.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_50_1/9.png" alt="drawing" width="160"/>
 
+### Discriminator loss weight = 1, PBP weight = 1
+
+<img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/0.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/1.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/2.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/3.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/4.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/5.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/6.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/7.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/8.png" alt="drawing" width="160"/><img src="./results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/9.png" alt="drawing" width="160"/>
+
 
 
 
