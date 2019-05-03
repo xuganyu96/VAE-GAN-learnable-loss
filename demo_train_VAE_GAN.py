@@ -59,8 +59,8 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_0.5/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_0.5.params'
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_1_1/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_1_1.params'
 n_epochs=200
 n_solo_epochs=0
 max_disc_loss=999
@@ -77,7 +77,8 @@ train_VAE_GAN(vae_net = conv_vae,
               vae_parameters_path = vae_parameters_path,
               batch_size = batch_size,
               init_lr = 0.001,
-              pbp_weight = 0.5,
+              pbp_weight = 1,
+              disc_loss_mul = 1,
               n_epochs = n_epochs,
               n_solo_epochs = n_solo_epochs,
               max_disc_loss = max_disc_loss,

@@ -28,6 +28,7 @@ def train_VAE_GAN(vae_net,
                   batch_size = 64,
                   init_lr = 0.001,
                   pbp_weight = 1,
+                  disc_loss_mul = 10,
                   n_epochs = 200,
                   n_solo_epochs = 0,
                   max_disc_loss = 999,
@@ -251,7 +252,7 @@ def train_VAE_GAN(vae_net,
                 # Sum up the VAE loss and the discriminator loss (with multiplier of 10)
                 # Then multiply batch_disc_loss by an integer
                 # that is 1 if 
-                gen_loss = vae_net(batch_features) + batch_disc_loss * 10 * use_disc_loss
+                gen_loss = vae_net(batch_features) + batch_disc_loss * disc_loss_mul * use_disc_loss
                 gen_loss.backward()
                 
                 # Record the VAE batch loss's average
