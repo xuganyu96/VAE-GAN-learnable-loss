@@ -59,13 +59,13 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_0.8/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_0.8.params'
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1.2/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1.2.params'
 n_epochs=200
 n_solo_epochs=0
 max_disc_loss=999
 variable_pbp_weight=False
-constant_pbp_weight = 0.8
+constant_pbp_weight = 1.2
 constant_disc_loss_mul = 10
 
 ##########################################################################################
@@ -95,7 +95,9 @@ train_VAE_GAN(vae_net = conv_vae,
 # Print training statistics for verifying that training statistics is successfully generated
 import pandas as pd
 tr_stats = pd.read_csv(test_results_dir + 'training_statistics.csv')
+print(tr_stats.shape)
 print(tr_stats.describe())
+
 
 
                    
