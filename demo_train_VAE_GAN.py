@@ -59,28 +59,20 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_20_1/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_20_1.params'
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_0.8/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_0.8.params'
 n_epochs=200
 n_solo_epochs=0
 max_disc_loss=999
 variable_pbp_weight=False
-constant_pbp_weight = 1
-constant_disc_loss_mul = 20
+constant_pbp_weight = 0.8
+constant_disc_loss_mul = 10
 
 ##########################################################################################
 ## Training
 ##########################################################################################
-print('''[STATE]: Starting to train with the following setting:
-{} epochs
-{} solo epochs
-{:.2f} max disciminator loss
-{} constant pbp weight
-{} constant discriminator loss weight'''.format(n_epochs, 
-                                                n_solo_epochs, 
-                                                max_disc_loss, 
-                                                constant_pbp_weight,
-                                                constant_disc_loss_mul))
+print('[STATE]: Starting to train with the following setting: {} epochs, {} solo epochs, {:.2f} max disciminator loss, {} constant pbp weight, {} constant discriminator loss weight'.format(n_epochs,n_solo_epochs, max_disc_loss, constant_pbp_weight, constant_disc_loss_mul))
+
 if variable_pbp_weight:
     print("[STATE]: PBP weight is set to be variable")
 
@@ -99,6 +91,11 @@ train_VAE_GAN(vae_net = conv_vae,
               max_disc_loss = max_disc_loss,
               variable_pbp_weight = variable_pbp_weight,
               CTX = d2l.try_gpu())
+
+# Print training statistics for verifying that training statistics is successfully generated
+import pandas as pd
+tr_stats = pd.read_csv(test_results_dir + 'training_statistics.csv')
+print(tr_stats.describe())
 
 
                    
