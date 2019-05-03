@@ -71,7 +71,19 @@ constant_disc_loss_mul = 20
 ##########################################################################################
 ## Training
 ##########################################################################################
-print('[STATE]: Starting to train with {} epochs, {} solo epochs, {:.2f}')
+print('''[STATE]: Starting to train with the following setting:
+{} epochs
+{} solo epochs
+{:.2f} max disciminator loss
+{} constant pbp weight
+{} constant discriminator loss weight'''.format(n_epochs, 
+                                                n_solo_epochs, 
+                                                max_disc_loss, 
+                                                constant_pbp_weight,
+                                                constant_disc_loss_mul))
+if variable_pbp_weight:
+    print("[STATE]: PBP weight is set to be variable")
+
 train_VAE_GAN(vae_net = conv_vae,
               disc_net = resnet,
               train_features = train_features,
