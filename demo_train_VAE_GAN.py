@@ -59,22 +59,19 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1.2/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1.2.params'
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1_decay0.95/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1_decay0.95.params'
 n_epochs=200
 n_solo_epochs=0
 max_disc_loss=999
-variable_pbp_weight=False
-constant_pbp_weight = 1.2
+variable_pbp_weight='decay'
+pbp_weight_decay = 0.95
+constant_pbp_weight = 1
 constant_disc_loss_mul = 10
 
 ##########################################################################################
 ## Training
 ##########################################################################################
-print('[STATE]: Starting to train with the following setting: {} epochs, {} solo epochs, {:.2f} max disciminator loss, {} constant pbp weight, {} constant discriminator loss weight'.format(n_epochs,n_solo_epochs, max_disc_loss, constant_pbp_weight, constant_disc_loss_mul))
-
-if variable_pbp_weight:
-    print("[STATE]: PBP weight is set to be variable")
 
 train_VAE_GAN(vae_net = conv_vae,
               disc_net = resnet,
@@ -90,6 +87,7 @@ train_VAE_GAN(vae_net = conv_vae,
               n_solo_epochs = n_solo_epochs,
               max_disc_loss = max_disc_loss,
               variable_pbp_weight = variable_pbp_weight,
+              pbp_weight_decay = pbp_weight_decay,
               CTX = d2l.try_gpu())
 
 # Print training statistics for verifying that training statistics is successfully generated

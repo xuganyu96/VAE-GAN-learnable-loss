@@ -32,7 +32,8 @@ def train_VAE_GAN(vae_net,
                   n_epochs = 200,
                   n_solo_epochs = 0,
                   max_disc_loss = 999,
-                  variable_pbp_weight = False,
+                  variable_pbp_weight = 'constant',
+                  pbp_weight_decay = 1,
                   CTX = d2l.try_gpu()):
     
     # VAE_net is a VAE network (most likely a ConvVAE with 512 latent variables
@@ -55,10 +56,13 @@ def train_VAE_GAN(vae_net,
     # max_disc_loss is the maximum loss beyond which the discriminator's loss
     # will not be used in updating VAE in the generator cycle
     
-    # variable_pbp_weight is true if and only if
-    # at each generator cycle, the pbp_weight of ConvVAE will be set
-    # to the mean of batch loss of the discriminator in the prior discriminator
-    # cycle
+    # If variable_pbp_weight is False/None, then the pbp weight will remain
+    # constant for all epochs (except when training solo, in which case
+    # the pbp weight is adjusted to 1, but will revert back to the specified value
+    # after solo epochs are done.
+    #
+    # If variable_pbp_weight is 'decay', then for every 25 combo epochs the
+    # pbp_weight will decrease by constant factor.
     
     #############################################################################
     ## MODEL INITIALIZATION AND TRAINER
@@ -108,10 +112,10 @@ def train_VAE_GAN(vae_net,
     # Write a few lines on README to indicate the hyper parameters
     readme_writer.write('n_latent:{} \n\n'.format(vae_net.n_latent))
     readme_writer.write('n_base_channels:{} \n\n'.format(vae_net.n_base_channels))
-    if not variable_pbp_weight:
-        readme_writer.write('PBP weight:{} \n\n'.format(vae_net.pbp_weight))
-    else:
-        readme_writer.write('PBP weight is variable \n\n')
+    if variable_pbp_weight == 'constant':
+        readme_writer.write('pixel-by-pixel loss weight:{} \n\n'.format(vae_net.pbp_weight))
+    elif variable_pbp_weight == 'decay':
+        readme_writer.write('pixel-by-pixel loss weight initially {} and decay by {} every 25 combo epochs \n\n'.format(vae_net.pbp_weight, pbp_weight_decay))
     readme_writer.write('n_solo_epochs:{} \n\n'.format(n_solo_epochs))
     readme_writer.write('n_combo_epochs:{} \n\n'.format(n_epochs - n_solo_epochs))
     readme_writer.write('max_disc_loss :{} \n\n'.format(max_disc_loss))
@@ -271,10 +275,11 @@ def train_VAE_GAN(vae_net,
         epoch_disc_train_loss = np.mean(disc_batch_losses)
         epoch_vae_train_loss = np.mean(vae_batch_losses)
         
-        # If variable_pbp_weight is set to true, update the pbp_weight here
-        if variable_pbp_weight:
-            vae_net.pbp_weight = epoch_disc_train_loss
-            print('VAE PBP weight adjusted to {:.10f}'.format(vae_net.pbp_weight))
+        # If variable_pbp_weight is set to decay, then decay the pbp weight
+        if variable_pbp_weight == 'decay':
+            if (1+epoch) % 25 == 0:
+                vae_net.pbp_weight = vae_net.pbp_weight * pbp_weight_decay
+                print('VAE PBP weight adjusted to {:.10f}'.format(vae_net.pbp_weight))
             
         # Check if discriminator is good enough at the end of this epoch
         # if good enough, keep use_disc_loss at 1
