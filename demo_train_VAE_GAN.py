@@ -59,13 +59,13 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1_decay0.95/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1_decay0.95.params'
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/512_32_200_10_1_decay0.9/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_512_32_200_10_1_decay0.9.params'
 n_epochs=200
 n_solo_epochs=0
 max_disc_loss=999
 variable_pbp_weight='decay'
-pbp_weight_decay = 0.95
+pbp_weight_decay = 0.9
 constant_pbp_weight = 1
 constant_disc_loss_mul = 10
 
