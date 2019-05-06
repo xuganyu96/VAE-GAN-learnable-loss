@@ -53,7 +53,7 @@ conv_vae_trainer = gluon.Trainer(conv_vae.collect_params(),
                         'adam', 
                         {'learning_rate': .001})
 
-# Instantiate the logistic regression model, initialize its paramters
+# Instantiate the ResNet discriminator model, initialize its paramters
 # and instantiate the trainer instance
 resnet = ResNet(n_classes = 1)
 resnet.collect_params().initialize(mx.init.Xavier(), ctx=CTX)
