@@ -36,7 +36,7 @@ all_features = nd.shuffle(all_features)
 n_train = int(all_features.shape[0] * 0.8)
 train_features = all_features[0:n_train]
 test_features = all_features[n_train:]
-batch_size = 64
+batch_size = 16
 _, n_channels, width, height = train_features.shape
 
 ##########################################################################################
@@ -45,7 +45,7 @@ _, n_channels, width, height = train_features.shape
 # Instantiate the gluon.Block instances
 # Do not initialize them or get trainers; initialization and trainer
 # are done in the VAE_GAN_train method
-n_latent = 1200
+n_latent = 1024
 n_base_channels = 32
 pbp_weight = 1
 conv_vae = ConvVAE(n_latent=n_latent,
@@ -59,10 +59,10 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/1200_32_600_10_1_decay0.95/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_1200_32_600_10_1_decay0.95.params'
-n_epochs=600
-n_solo_epochs=0
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/1024_32_200+200_10_1_decay0.95/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_1024_32_200+200_10_1_decay0.95.params'
+n_epochs=400
+n_solo_epochs=200
 max_disc_loss=999
 variable_pbp_weight='decay'
 pbp_weight_decay = 0.95
