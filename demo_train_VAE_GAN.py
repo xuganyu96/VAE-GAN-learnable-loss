@@ -8,7 +8,6 @@ CTX = d2l.try_gpu()
 import time
 import matplotlib.pyplot as plt
 import os
-os.system('export MXNET_CUDNN_AUTOTUNE_DEFAULT=0')
 
 # Import the ConvVAE and ResNet
 import sys
@@ -16,6 +15,8 @@ sys.path.insert(0, "./models")
 from ConvVAE import ConvVAE
 from ResNet import ResNet
 from ConvDisc_LeakyReLU import ConvDisc_LeakyReLU as ConvDisc
+from DeepConvDisc import DeepConvDisc
+from DeepConvVAE import DeepConvVAE
 
 # Import the VAE_GAN training method
 from train_VAE_GAN import train_VAE_GAN
@@ -49,21 +50,21 @@ _, n_channels, width, height = train_features.shape
 n_latent = 1024
 n_base_channels = 32
 pbp_weight = 1
-conv_vae = ConvVAE(n_latent=n_latent,
-                   n_channels=n_channels,
-                   out_width=width,
-                   out_height=height,
-                   n_base_channels=n_base_channels,
-                  pbp_weight=pbp_weight)
+conv_vae = DeepConvVAE(n_latent=n_latent,
+                       n_channels=n_channels,
+                       out_width=width,
+                       out_height=height,
+                       n_base_channels=n_base_channels,
+                       pbp_weight=pbp_weight)
 # resnet = ResNet(n_classes=1)
-conv_disc = ConvDisc(n_classes = 1,
-                    n_base_channels = n_base_channels*2)
+conv_disc = DeepConvDisc(n_classes = 1,
+                         n_base_channels = n_base_channels*2)
 
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ConvDisc_LeakyReLU_on_anime/1024_32_64_200_10_1/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ConvDisc_1024_32_64_200_10_1.params'
+test_results_dir = './results/images/DeepConvVAE_DeepConvDisc_on_anime/1024_32_64_200_10_1_initlr2e-4/'
+vae_parameters_path = '../project_data/model_parameters/DConvVAE_against_DConvDisc_1024_32_64_200_10_1_initlr2e-4.params'
 n_epochs=200
 n_solo_epochs=100
 max_disc_loss=999
