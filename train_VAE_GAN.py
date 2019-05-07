@@ -92,6 +92,7 @@ def train_VAE_GAN(vae_net,
     #
     # Open a file to write to for training statistics; the training statistics csv
     # will be written to the results directory
+    csv_writer = None
     try:
         csv_writer = open(test_results_dir + 'training_statistics.csv', 'w')
         print('[STATE]: Writing training statistics to ' + test_results_dir + 'training_statistics.csv')
@@ -103,6 +104,7 @@ def train_VAE_GAN(vae_net,
         
     # Open a file to write README.md for displaying validation images; the README
     # file will be written to the results directory
+    readme_writer = None
     try:
         readme_writer = open(test_results_dir + 'README.md', 'w')
         print('[STATE]: Writing README report to ' + test_results_dir + 'README.md')
