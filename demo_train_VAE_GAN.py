@@ -15,6 +15,7 @@ import sys
 sys.path.insert(0, "./models")
 from ConvVAE import ConvVAE
 from ResNet import ResNet
+from ConvDisc_LeakyReLU import ConvDisc_LeakyReLU as ConvDisc
 
 # Import the VAE_GAN training method
 from train_VAE_GAN import train_VAE_GAN
@@ -54,13 +55,15 @@ conv_vae = ConvVAE(n_latent=n_latent,
                    out_height=height,
                    n_base_channels=n_base_channels,
                   pbp_weight=pbp_weight)
-resnet = ResNet(n_classes=1)
+# resnet = ResNet(n_classes=1)
+conv_disc = ConvDisc(n_classes = 1,
+                    n_base_channels = n_base_channels*2)
 
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/1024_32_200_10_1_initlr2e-4/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_1024_32_200_10_1_initlr2e-4.params'
+test_results_dir = './results/images/ConvVAE_ConvDisc_LeakyReLU_on_anime/1024_32_64_200_10_1/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ConvDisc_1024_32_64_200_10_1.params'
 n_epochs=200
 n_solo_epochs=100
 max_disc_loss=999
@@ -74,7 +77,7 @@ constant_disc_loss_mul = 10
 ##########################################################################################
 
 train_VAE_GAN(vae_net = conv_vae,
-              disc_net = resnet,
+              disc_net = conv_disc,
               train_features = train_features,
               test_features = test_features,
               test_results_dir = test_results_dir,
