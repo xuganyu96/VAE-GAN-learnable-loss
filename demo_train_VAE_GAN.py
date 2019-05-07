@@ -36,7 +36,7 @@ all_features = nd.shuffle(all_features)
 n_train = int(all_features.shape[0] * 0.8)
 train_features = all_features[0:n_train]
 test_features = all_features[n_train:]
-batch_size = 16
+batch_size = 64
 _, n_channels, width, height = train_features.shape
 
 ##########################################################################################
@@ -59,12 +59,12 @@ resnet = ResNet(n_classes=1)
 ##########################################################################################
 ## ADDITIONAL TRAINING HYPERPARAMETERS
 ##########################################################################################
-test_results_dir = './results/images/ConvVAE_ResNet_on_anime/1024_32_200+200_10_1_decay0.95/'
-vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_1024_32_200+200_10_1_decay0.95.params'
-n_epochs=400
-n_solo_epochs=200
+test_results_dir = './results/images/ConvVAE_ResNet_on_anime/1024_32_200_10_1_initlr2e-4/'
+vae_parameters_path = '../project_data/model_parameters/ConvVAE_against_ResNet_1024_32_200_10_1_initlr2e-4.params'
+n_epochs=200
+n_solo_epochs=100
 max_disc_loss=999
-variable_pbp_weight='decay'
+variable_pbp_weight='constant'
 pbp_weight_decay = 0.95
 constant_pbp_weight = 1
 constant_disc_loss_mul = 10
@@ -80,7 +80,7 @@ train_VAE_GAN(vae_net = conv_vae,
               test_results_dir = test_results_dir,
               vae_parameters_path = vae_parameters_path,
               batch_size = batch_size,
-              init_lr = 0.001,
+              init_lr = 0.0002,
               pbp_weight = constant_pbp_weight,
               disc_loss_mul = constant_disc_loss_mul,
               n_epochs = n_epochs,
