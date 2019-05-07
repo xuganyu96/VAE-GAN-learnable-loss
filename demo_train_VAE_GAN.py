@@ -65,8 +65,8 @@ conv_disc = DeepConvDisc(n_classes = 1,
 ##########################################################################################
 test_results_dir = './results/images/DeepConvVAE_DeepConvDisc_on_anime/1024_32_64_200_10_1_initlr2e-4/'
 vae_parameters_path = '../project_data/model_parameters/DConvVAE_against_DConvDisc_1024_32_64_200_10_1_initlr2e-4.params'
-n_epochs=2
-n_solo_epochs=1
+n_epochs=200
+n_solo_epochs=100
 max_disc_loss=999
 variable_pbp_weight='constant'
 pbp_weight_decay = 0.95
